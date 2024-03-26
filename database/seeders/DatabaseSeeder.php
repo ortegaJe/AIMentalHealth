@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
                 // insertar paticientes
                 \App\Models\Patient::factory(5)->create();
         
-                // llenar  doctor_patient tabla
+                // llenar doctor_patient tabla
                 $data = [
                     ['patient_id' => 1, 'user_id' => fake()->numberBetween(1, 2)],
                     ['patient_id' => 2, 'user_id' => fake()->numberBetween(1, 2)],

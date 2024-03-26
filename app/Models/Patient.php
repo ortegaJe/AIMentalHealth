@@ -21,7 +21,7 @@ class Patient extends Model
     protected $fillable = [
         'name',
         'lastname',
-        'identification',
+        'noSSocial',
         'dob',
         'phone',
         'email',
@@ -30,9 +30,23 @@ class Patient extends Model
         'background',
     ];
 
+    public function scans()
+    {
+        return $this->hasMany(Scan::class);
+    }
+
+    public function orientationLtrs()
+    {
+        return $this->hasMany(OrientationLetter::class);
+    }
+
     public function appointments()
     {
     return $this->hasMany(Appointment::class);
+    }
+    public function prescriptions()
+    {
+        return $this->hasMany(Prescription::class);
     }
     
     /**

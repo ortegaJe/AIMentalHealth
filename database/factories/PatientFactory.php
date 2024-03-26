@@ -17,13 +17,18 @@ class PatientFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
-            'lastname' => fake()->name(),
             'identification' => fake()->numberBetween(10, 20),
+            'full_name' => fake()->name(). '' . fake()->lastName(),
+            'age' => fake()->numberBetween(18, 28),
             'dob' => fake()->date('Y_m_d'),
+            'address' => fake()->address(),
+            'neighborhood' => fake()->text(),
+            'city' => fake()->city(),
+            //'program_id' => fake()->numberBetween(1, 10),
+            'cuatrimestre' => fake()->numberBetween(1, 5),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
-            'chat_info' => fake()->sentence(),
+            'chat_info' => fake()->paragraph(),
             'antecedents' => fake()->sentence(),
             'comments' => fake()->paragraph(),
         ];

@@ -32,6 +32,39 @@ Route::middleware(['auth', 'user-role:ADMIN'])->group(
     }
 );
 
+Route::middleware(['auth', 'user-role:DOCTOR|ADMIN'])->group(
+    function () {
+        Route::resource('patients', PatientsController::class);
+
+        Route::get('/scans/{id}/download', [ScansController::class, 'download'])
+            ->name(
+                'scans.download'
+            );
+
+        Route::resource('scans', ScansController::class);
+
+        Route::resource('orientationLtr', OrientationLtrController::class);
+
+        Route::get('/prescriptions/{id}/print', [PrescriptionsController::class, 'print'])
+            ->name(
+                'prescriptions.print'
+            );
+        Route::resource('prescriptions', PrescriptionsController::class);
+
+    }
+);
+
+Route::middleware(['auth', 'user-role:DOCTOR|SECRETARY|ADMIN'])->group(
+    function () {
+        Route::resource('appointment', AppointmentController::class);
+        Route::post('/patients/find', [PatientsController::class, 'findByQuery'])
+            ->name(
+                'patients.findByQuery'
+            );
+
+    }
+);
+
 Route::match (['get', 'post'], '/login',  [AuthController::class, 'login'])
     ->name(
         'login'
@@ -48,3 +81,11 @@ Route::get('/logout', [AuthController::class, 'logout'])
         'auth'
     );
 
+    Route::middleware(['auth', 'user-role:SECRETARY|ADMIN'])->group(
+    function () {
+        Route::post('/users/find', [UsersController::class, 'findByQuery'])
+            ->name(
+                'users.findByQuery'
+            );
+    }
+);

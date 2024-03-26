@@ -15,16 +15,23 @@ return new class extends Migration {
         Schema::create(
             'patients', function (Blueprint $table) {
                 $table->id();
-                $table->timestamps();
-                $table->string('name');
-                $table->string('lastname');
                 $table->integer('identification');
+                $table->string('full_name');
+                $table->integer('age');
                 $table->date('dob');
                 $table->string('phone');
+                $table->string('address');
+                $table->string('neighborhood');
+                $table->string('city');
                 $table->string('email');
+                $table->unsignedBigInteger('program_id')->nullable();
+                $table->integer('cuatrimestre')->nullable();
                 $table->string('chat_info')->nullable();
                 $table->string('antecedents')->nullable();
                 $table->string('comments')->nullable();
+                $table->timestamps();
+
+                $table->foreign('program_id')->references('id')->on('programs')->onDelete('cascade');
             }
         );
     }

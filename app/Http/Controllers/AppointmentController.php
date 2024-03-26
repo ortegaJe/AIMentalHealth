@@ -26,21 +26,24 @@ class AppointmentController extends Controller
         //return $appointments;
         $appointments = [];
 
+        $appointments = Appointment::join('patients as p', 'p.id', 'appointments.patient_id')->get();
+
         // FIXME hide private appointment 
         // when we implement private patient(that are created by the doctor himself)
 
         // find all  appointment to secretary
-        if (UserRoles::isSecretary(Auth::user()->role) || UserRoles::isAdmin(Auth::user()->role)) 
+/*         if (UserRoles::isSecretary(Auth::user()->role) || UserRoles::isAdmin(Auth::user()->role)) 
         {
             $appointments = Appointment::join('patients as p', 'p.id', 'appointments.patient_id')->get();
-        }
-        // find all  appointment assigned to a doctor
+        } */
+/*         // find all  appointment assigned to a doctor
         else if (UserRoles::isDoctor(Auth::user()->role)) 
         {
             $doctor = User::find(Auth::user()->id);
             $appointments = $doctor->appointments;
-        }
-        return view('appointments.index', ['appointments' => $appointments]);
+        } */
+
+        return $appointments;
     }
 
     /**
@@ -61,24 +64,23 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentFormRequest $request)
     {
-        $patient = Patient::find($request->patient_id);
+        $patient = Patient::find(3);
 
         $validated = $request->validated();
 
         $patient->appointments()->create(
             array_merge(
                 $validated,
-                ['user_id' => $request->doctor_id],
+                ['user_id' => 2],
             )
         );
 
         // If a patient will have an appointment with a doctor 
         // we attachPatient to the current doctor
-        ModelHelpers::attachPatient($request->doctor_id, $patient->id);
+        ModelHelpers::attachPatient(2, 3);
 
 
-        return back()
-            ->with('success', 'a new appointment is created');
+        //return $patient;
             
     }
 

@@ -19,15 +19,10 @@ class PatientsController extends Controller
      */
     public function index()
     {
-        $patients = Auth::user()
-            ->patients(
-            )
-            ->orderBy(
-                'lastname'
-            )
-            ->get(
-            );
-        return view('patients.index', ['patients' => $patients]);
+        $patients = Patient::orderBy('full_name')
+            ->get();
+
+        return $patients;
     }
 
     // find the  patients whose  names or last name match the query provided  
@@ -62,33 +57,21 @@ class PatientsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PatientFormRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        $patient = Patient::create($validated);
+        //$validated = $request->validated();
+        $patient = Patient::create($request->all());
 
         // If this patient was added by the doctor 
         // we attachPatient to the current doctor
         if (isset($request->doctor_id)) {
             ModelHelpers::attachPatient($request->doctor_id, $patient->id);
 
-            return redirect()
-                ->route(
-                    'patients.show',
-                    ['patient' => $patient]
-                )
-                ->with(
-                    'success', 'patients: ' . $patient->name . ' is created '
-                );
+            return $patient;
         }
 
-        return redirect()
-            ->route(
-                'patients.index'
-            )
-            ->with(
-                'success', 'patients: ' . $patient->name . ' is created '
-            );
+        return $patient;
+
     }
 
     /**
@@ -115,16 +98,15 @@ class PatientsController extends Controller
         // A list of doctor-patient scans
         $scans = $patient->scans()->where('user_id', $doctor_id)->get();
 
-        return view(
-            'patients.show',
-            [
-                'patient' => $patient,
-                'appointments' => $appointments,
-                'prescriptions'=>$prescriptions,
-                'scans'=>$scans,
-                'orientationLtrs'=>$orientationLtrs,
-            ]
-        );
+        $data = [
+            'patient' => $patient,
+            'appointments' => $appointments,
+            'prescriptions'=>$prescriptions,
+            'scans'=>$scans,
+            'orientationLtrs'=>$orientationLtrs,
+        ];
+
+        return $data;
     }
 
     /**

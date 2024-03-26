@@ -22,7 +22,8 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('users.index', ['users' => $users]);
+        
+        return $users;
     }
 
     /**
@@ -67,9 +68,9 @@ class UsersController extends Controller
 
         // store the VALIDATED user info to the database
         $user = User::create($validated);
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'User is created! username: ' . $user->username);
+
+        //return ["Result" => "Data has been saved"];
+    
     }
 
     /**
