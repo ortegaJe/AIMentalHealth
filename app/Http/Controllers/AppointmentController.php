@@ -64,23 +64,23 @@ class AppointmentController extends Controller
      */
     public function store(AppointmentFormRequest $request)
     {
-        $patient = Patient::find(3);
+        $patient = Patient::find($request->patient_id);
 
         $validated = $request->validated();
 
         $patient->appointments()->create(
             array_merge(
                 $validated,
-                ['user_id' => 2],
+                ['user_id' => $request->doctor_id],
             )
         );
 
         // If a patient will have an appointment with a doctor 
         // we attachPatient to the current doctor
-        ModelHelpers::attachPatient(2, 3);
+        ModelHelpers::attachPatient($request->doctor_id, $patient->id);
 
 
-        //return $patient;
+        return ["Result" => "Data has been saved", "Data" => $patient];
             
     }
 

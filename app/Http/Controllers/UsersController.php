@@ -69,7 +69,7 @@ class UsersController extends Controller
         // store the VALIDATED user info to the database
         $user = User::create($validated);
 
-        //return ["Result" => "Data has been saved"];
+        return ["Result" => "Data has been saved", "Data" => $user];
     
     }
 
@@ -79,8 +79,9 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
+        return $user;
     }
 
     /**
@@ -91,9 +92,8 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-
         // TODO check if $this  the update authorization 
-        return view('users.edit', ['user' => $user]);
+        return $user;
     }
 
     /**
@@ -109,9 +109,9 @@ class UsersController extends Controller
 
         $validated = $request->validated();
         $user->update($validated);
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'User is updated! username: ' . $user->username);
+
+        return ["Result" => "Data has been updated"];
+
     }
 
     /**
@@ -125,8 +125,8 @@ class UsersController extends Controller
         // TODO check if $this has the delete authorization 
 
         $user->delete();
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'User has been deleted!');
+
+        return ["Result" => "Data has been deleted"];
+
     }
 }

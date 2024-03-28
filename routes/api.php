@@ -25,9 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/test', function (Request $request) {
+    return dd($request->user());
+});
+
 Route::group(['prefix' => 'v1', 'namespace' => '\App\Http\Controllers'], function() {
-    Route::get('users', [UsersController::class, 'index']);
-    Route::post('/users-add', [UsersController::class, 'store']);
+    Route::apiResource('users', UsersController::class);
 });
 
 Route::group(['prefix' => 'v1', 'namespace' => '\App\Http\Controllers'], function() {

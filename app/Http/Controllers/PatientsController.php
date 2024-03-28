@@ -19,8 +19,7 @@ class PatientsController extends Controller
      */
     public function index()
     {
-        $patients = Patient::orderBy('full_name')
-            ->get();
+        $patients = Patient::orderBy('id')->get();
 
         return $patients;
     }
@@ -67,10 +66,10 @@ class PatientsController extends Controller
         if (isset($request->doctor_id)) {
             ModelHelpers::attachPatient($request->doctor_id, $patient->id);
 
-            return $patient;
+            return ["Result" => "Data has been saved", "Data" => $patient];
         }
 
-        return $patient;
+        return ["Result" => "Data has been saved", "Data" => $patient];
 
     }
 
@@ -84,19 +83,19 @@ class PatientsController extends Controller
     {
 
         // current doctor ID
-        $doctor_id = Auth::user()->id;
+        //$doctor_id = Auth::user()->id;
 
         // A list of doctor-patient appointments
-        $appointments = $patient->appointments()->where('user_id', $doctor_id)->get();
+        $appointments = $patient->appointments()->get();
 
         // A list of doctor-patient orientationLtrs
-        $orientationLtrs = $patient->orientationLtrs()->where('user_id', $doctor_id)->get();
+        $orientationLtrs = $patient->orientationLtrs()->get();
         
         // A list of doctor-patient prescriptions
-        $prescriptions = $patient->prescriptions()->where('user_id', $doctor_id)->get();
+        $prescriptions = $patient->prescriptions()->get();
         
         // A list of doctor-patient scans
-        $scans = $patient->scans()->where('user_id', $doctor_id)->get();
+        $scans = $patient->scans()->get();
 
         $data = [
             'patient' => $patient,
