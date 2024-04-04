@@ -21,18 +21,30 @@ class PatientsController extends Controller
     {
         $patients = Patient::orderBy('id')->get();
 
-        return $patients;
+        return view('patients.index', ['patients' => $patients]);
     }
 
     // find the  patients whose  names or last name match the query provided  
     public function findByQuery(Request $request)
     {
-        $result = Patient::select('id', DB::raw("CONCAT(patients.name,' ',patients.lastname) as text"))
+        $result = Patient::select('id', DB::raw("CONCAT(patients.full_name) as text"))
             ->where(
-                'lastname',
+                'full_name',
                 'LIKE', '%' . request('queryTerm') . '%'
             )
             ->orWhere(
+                'full_name',
+                'LIKE', '%' . request('queryTerm') . '%'
+            )
+            ->get(
+            );
+        return response()->json($result);
+    }
+
+    public function findByQueryProgram(Request $request)
+    {
+        $result = DB::table('programs')->select('id', DB::raw("name as text"))
+            ->where(
                 'name',
                 'LIKE', '%' . request('queryTerm') . '%'
             )
@@ -56,21 +68,33 @@ class PatientsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PatientFormRequest $request)
     {
-        //$validated = $request->validated();
-        $patient = Patient::create($request->all());
+        $validated = $request->validated();
+        $patient = Patient::create($validated);
 
         // If this patient was added by the doctor 
         // we attachPatient to the current doctor
         if (isset($request->doctor_id)) {
             ModelHelpers::attachPatient($request->doctor_id, $patient->id);
 
-            return ["Result" => "Data has been saved", "Data" => $patient];
+            return redirect()
+                ->route(
+                    'patients.show',
+                    ['patient' => $patient]
+                )
+                ->with(
+                    'success', 'patients: ' . $patient->name . ' is created '
+                );
         }
 
-        return ["Result" => "Data has been saved", "Data" => $patient];
-
+        return redirect()
+            ->route(
+                'patients.index'
+            )
+            ->with(
+                'success', 'patients: ' . $patient->name . ' is created '
+            );
     }
 
     /**
@@ -83,29 +107,33 @@ class PatientsController extends Controller
     {
 
         // current doctor ID
-        //$doctor_id = Auth::user()->id;
+        $doctor_id = Auth::user()->id;
 
         // A list of doctor-patient appointments
-        $appointments = $patient->appointments()->get();
+        $appointments = $patient->appointments()->where('user_id', $doctor_id)->get();
 
         // A list of doctor-patient orientationLtrs
-        $orientationLtrs = $patient->orientationLtrs()->get();
+        $orientationLtrs = $patient->orientationLtrs()->where('user_id', $doctor_id)->get();
         
         // A list of doctor-patient prescriptions
-        $prescriptions = $patient->prescriptions()->get();
+        $prescriptions = $patient->prescriptions()->where('user_id', $doctor_id)->get();
         
         // A list of doctor-patient scans
-        $scans = $patient->scans()->get();
+        $scans = $patient->scans()->where('user_id', $doctor_id)->get();
 
-        $data = [
-            'patient' => $patient,
-            'appointments' => $appointments,
-            'prescriptions'=>$prescriptions,
-            'scans'=>$scans,
-            'orientationLtrs'=>$orientationLtrs,
-        ];
+        $programs = $patient::join('programs', 'programs.id', 'patients.program_id')->get(['programs.id as id_program','programs.name as program']);
 
-        return $data;
+        return view(
+            'patients.show',
+            [
+                'patient' => $patient,
+                'appointments' => $appointments,
+                'prescriptions'=>$prescriptions,
+                'scans'=>$scans,
+                'orientationLtrs'=>$orientationLtrs,
+                'programs' => $programs,
+            ]
+        );
     }
 
     /**

@@ -19,7 +19,7 @@
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>\
+<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
@@ -116,6 +116,52 @@
 
             ajax: {
                 url: "{{ route('users.findByQuery') }}",
+                type: 'post',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        _token: token,
+                        queryTerm: params.term,
+                    };
+                },
+                processResults: function(response) {
+                    return {
+                        results: response
+                    }
+                },
+                // cache: true
+            }
+        });
+
+        // 3. get the programa whose name match the query provided
+        $('.select2-program-ajax').select2({
+
+            ajax: {
+                url: "{{ route('programs.findByQueryProgram') }}",
+                type: 'post',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        _token: token,
+                        queryTerm: params.term,
+                    };
+                },
+                processResults: function(response) {
+                    return {
+                        results: response
+                    }
+                },
+                // cache: true
+            }
+        });
+
+        // 4. get the programa whose name match the query provided for form question
+        $('.select2-form-program-ajax').select2({
+
+            ajax: {
+                url: "{{ route('form.programs.findByQueryProgram') }}",
                 type: 'post',
                 dataType: 'json',
                 delay: 250,

@@ -24,14 +24,17 @@ class PatientFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'lastname' => 'required',
-            'noSSocial' =>  'required',
+            'full_name' => 'required',
+            'identification' =>  'required',
+            'age' => 'required',
+            'address'  => 'required',
+            'neighborhood' => 'required',
+            'city' => 'required',
+            'program_id' => 'required',
+            'cuatrimestre' => 'required',
             'dob' =>  'required',
             'email' =>  'required',
             'phone' =>  'required',
-            'diseases' => 'nullable|string',
-            'allergies' => 'nullable|string',
             'antecedents' => 'nullable|string',
             'comments' => 'nullable|string',
 

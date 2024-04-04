@@ -50,7 +50,11 @@ class OrientationLtrController extends Controller
                 'user_id' => $doctor_id
             ]
         );
-        return $patient;
+        return back()
+        ->with(
+            'success',
+            'a new orientation letter is created'
+        );
     }
 
     /**

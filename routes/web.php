@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OrientationLtrController;
 use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\PrescriptionsController;
@@ -19,6 +20,30 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get(
+    '/formulario', function () {
+        return view('form');
+    }
+)->name('form');
+
+Route::post('/form/programs/find', [ChatController::class, 'findByQueryProgram'])
+->name(
+    'form.programs.findByQueryProgram'
+);
+
+Route::post('/save-patients-form', [ChatController::class, 'savePatientForm'])
+->name(
+    'form.savePatientForm'
+);
+
+Route::get('/questions/{patient}', [ChatController::class, 'questionPatient'])->name('questions');
+
+Route::post('/save-questions/{patient}', [ChatController::class, 'storeQuestionPatient'])->name('questions.store');
+
+Route::get('/chat/{patient}', [ChatController::class, 'chatPatient'])->name('chat');
+
+Route::post('/chat-services', [ChatController::class, 'serviceChatPatient']);
 
 Route::get(
     '/', function () {
@@ -61,6 +86,10 @@ Route::middleware(['auth', 'user-role:DOCTOR|SECRETARY|ADMIN'])->group(
             ->name(
                 'patients.findByQuery'
             );
+        Route::post('/programs/find', [PatientsController::class, 'findByQueryProgram'])
+        ->name(
+            'programs.findByQueryProgram'
+        );
 
     }
 );

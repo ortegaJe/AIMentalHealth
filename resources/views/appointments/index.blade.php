@@ -68,7 +68,7 @@
                                     <tr role="row" class="{{ $counter % 2 == 0 ? 'even' : 'odd' }}">
                                         <td class="dtr-control sorting_1" tabindex="0">
                                             {{ $appointment['date'] }}</td>
-                                        <td>{{ $appointment['name'] }}</td>
+                                        <td>{{ $appointment['full_name'] }}</td>
                                         <td>{{ $appointment['start_time'] }}</td>
                                         <td>{{ $appointment['end_time'] }}</td>
                                         <td class="truncate">{{ $appointment['motivation'] }}</td>

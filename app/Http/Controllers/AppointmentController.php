@@ -22,28 +22,24 @@ class AppointmentController extends Controller
     // $id
     public function index()
     {
-        //$appointments = Appointment::join('patients as p', 'p.id', 'appointments.patient_id')->get();
-        //return $appointments;
         $appointments = [];
-
-        $appointments = Appointment::join('patients as p', 'p.id', 'appointments.patient_id')->get();
 
         // FIXME hide private appointment 
         // when we implement private patient(that are created by the doctor himself)
 
         // find all  appointment to secretary
-/*         if (UserRoles::isSecretary(Auth::user()->role) || UserRoles::isAdmin(Auth::user()->role)) 
+        if (UserRoles::isSecretary(Auth::user()->role) || UserRoles::isAdmin(Auth::user()->role)) 
         {
             $appointments = Appointment::join('patients as p', 'p.id', 'appointments.patient_id')->get();
-        } */
-/*         // find all  appointment assigned to a doctor
+        }
+        // find all  appointment assigned to a doctor
         else if (UserRoles::isDoctor(Auth::user()->role)) 
         {
             $doctor = User::find(Auth::user()->id);
             $appointments = $doctor->appointments;
-        } */
+        }
 
-        return $appointments;
+        return view('appointments.index', ['appointments' => $appointments]);
     }
 
     /**
@@ -80,7 +76,8 @@ class AppointmentController extends Controller
         ModelHelpers::attachPatient($request->doctor_id, $patient->id);
 
 
-        return ["Result" => "Data has been saved", "Data" => $patient];
+        return back()
+            ->with('success', 'a new appointment is created');
             
     }
 
