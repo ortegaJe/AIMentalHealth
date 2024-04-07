@@ -154,7 +154,7 @@
       //Populate sending message
       $(".messages > .message").last().after('<div class="right message">' +
         '<p>' + $("form #message").val() + '</p>' +
-        '<img src="{{ asset('media/icons/chatbot.png') }}" alt="ai-chat">' +
+        '<img src="{{ asset('media/icons/chatuser.png') }}" alt="ai-chat">' +
         '</div>');
 
       //Populate receiving message
