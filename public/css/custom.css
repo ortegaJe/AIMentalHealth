@@ -343,9 +343,9 @@ table {
     height: 60px;
     border-radius: 100%;
     border: none;
-    background-color: #30C04F;
+    background-color: #007bff;
   }
   
   .button:hover {
-    background-color: #2bac47;
+    background-color: #0079fac9;;
   }

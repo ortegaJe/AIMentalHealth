@@ -50,7 +50,7 @@
                 @if (Auth::user()->role->value != \App\Enums\UserRoles::SECRETARY->value)
                     <li class="nav-item">
                         <a href="{{ route('patients.index') }}" class="nav-link">
-                            <i class=" nav-icon fas fa-plus-circle"></i>
+                            <i class="nav-icon fas fa-users"></i>
                             <p>Pacientes</p>
                         </a>
                     </li>
@@ -58,7 +58,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('appointment.index') }}" class="nav-link">
-                        <i class=" nav-icon fas fa-stethoscope"></i>
+                        <i class="nav-icon fas fa-notes-medical"></i>
                         <p>Citas</p>
                     </a>
                 </li>

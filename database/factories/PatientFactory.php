@@ -24,11 +24,10 @@ class PatientFactory extends Factory
             'address' => fake()->address(),
             'neighborhood' => fake()->text(),
             'city' => fake()->city(),
-            //'program_id' => fake()->numberBetween(1, 10),
+            'program_id' => fake()->numberBetween(1, 21),
             'cuatrimestre' => fake()->numberBetween(1, 5),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
-            'chat_info' => fake()->paragraph(),
             'antecedents' => fake()->sentence(),
             'comments' => fake()->paragraph(),
         ];

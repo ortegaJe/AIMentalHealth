@@ -36,7 +36,9 @@ class AppointmentController extends Controller
         else if (UserRoles::isDoctor(Auth::user()->role)) 
         {
             $doctor = User::find(Auth::user()->id);
-            $appointments = $doctor->appointments;
+            $appointments = Appointment::join('users', 'users.id', 'appointments.user_id')
+                                            ->join('patients', 'patients.id', 'appointments.patient_id')
+                                                ->where('appointments.user_id', $doctor->id)->get();
         }
 
         return view('appointments.index', ['appointments' => $appointments]);
@@ -87,9 +89,36 @@ class AppointmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Patient $patient)
     {
-        //
+                // current doctor ID
+                $doctor_id = Auth::user()->id;
+
+                // A list of doctor-patient appointments
+                $appointments = $patient->appointments()->where('user_id', $doctor_id)->get();
+        
+                // A list of doctor-patient orientationLtrs
+                $orientationLtrs = $patient->orientationLtrs()->where('user_id', $doctor_id)->get();
+                
+                // A list of doctor-patient prescriptions
+                $prescriptions = $patient->prescriptions()->where('user_id', $doctor_id)->get();
+                
+                // A list of doctor-patient scans
+                $scans = $patient->scans()->where('user_id', $doctor_id)->get();
+        
+                $programs = $patient::join('programs', 'programs.id', 'patients.program_id')->get(['programs.id as id_program','programs.name as program']);
+        
+                return view(
+                    'appointments.index',
+                    [
+                        'patient' => $patient,
+                        'appointments' => $appointments,
+                        'prescriptions'=>$prescriptions,
+                        'scans'=>$scans,
+                        'orientationLtrs'=>$orientationLtrs,
+                        'programs' => $programs,
+                    ]
+                );
     }
 
     /**

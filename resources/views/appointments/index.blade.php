@@ -54,9 +54,12 @@
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="Engine version: activate to sort column ascending">
                                         Motivo</th>
-                                    {{--                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
+                                        colspan="1" aria-label="Engine version: activate to sort column ascending">
+                                        Estado</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="CSS grade: activate to sort column ascending">
-                                        actions</th> --}}
+                                        actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,6 +75,16 @@
                                         <td>{{ $appointment['start_time'] }}</td>
                                         <td>{{ $appointment['end_time'] }}</td>
                                         <td class="truncate">{{ $appointment['motivation'] }}</td>
+                                        <td>
+                                            {{ $appointment['status'] == 0 ? 'PENDIENTE' : 'ACTIVO' }}
+                                        </td>
+                                        <td>
+                                            <button type="button"
+                                                onclick="window.location='{{ route('patients.show', [$appointment->patient_id]) }}'"
+                                                class="btn btn-danger btn-block">
+                                                <i class="fas fa-notes-medical"></i>
+                                            </button>
+                                        </td>
 
                                         {{-- <td
                                             style="padding-right: -3.25rem;border-right-width: 0px;height: 37px;width: 95.833px;">
@@ -99,11 +112,6 @@
                     </div>
                 </div>
             </div>
-            {{--             <div class="add-btn-container">
-                <button type="button" class="btn-success add-btn" data-toggle="modal" data-target="#modal_add_appointment">
-                    +
-                </button>
-            </div> --}}
         </div>
         <!-- /.card-body -->
     </div>

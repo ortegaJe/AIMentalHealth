@@ -44,7 +44,7 @@
                         <input type="number" id="patient_id" name="patient_id" value="{{ $patient->id }}" hidden>
                         @foreach ($questions as $question)
                             <div class="form-group">
-                                <label for="{{ $question->id }}">{{ $question->description }}</label><br>
+                                <label for="{{ $question->id }}">{{ $question->name }}</label><br>
                                 <input type="radio" id="{{ $question->id }}_si" name="question_{{ $question->id }}"
                                     value="1">
                                 <label for="{{ $question->id }}_si">Sí</label>

@@ -65,29 +65,29 @@
                 </div>
             </div>
             <div class="add-btn-container">
-                <button class="Btn" data-toggle="modal" data-target="#modal-add-patient">
-                    <div class="sign">
-                        <svg viewBox="0 -0.5 9 9" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <title>plus_mini [#ffffff]</title>
-                                <desc>Created with Sketch.</desc>
-                                <defs> </defs>
-                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="Dribbble-Light-Preview" transform="translate(-345.000000, -206.000000)" fill="#ffffff">
-                                        <g id="icons" transform="translate(56.000000, 160.000000)">
-                                            <polygon id="plus_mini-[#ffffff]"
-                                                points="298 49 298 51 294.625 51 294.625 54 292.375 54 292.375 51 289 51 289 49 292.375 49 292.375 46 294.625 46 294.625 49">
-                                            </polygon>
-                                        </g>
+                <button class="button add-btn" data-toggle="modal" data-target="#modal_add_patient">
+                    <svg viewBox="0 -0.5 9 9" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" width="18"
+                        height="18">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <title>plus_mini [#ffffff]</title>
+                            <desc>Created with Sketch.</desc>
+                            <defs> </defs>
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
+                                fill-rule="evenodd">
+                                <g id="Dribbble-Light-Preview"
+                                    transform="translate(-345.000000, -206.000000)" fill="#ffffff">
+                                    <g id="icons" transform="translate(56.000000, 160.000000)">
+                                        <polygon id="plus_mini-[#ffffff]"
+                                            points="298 49 298 51 294.625 51 294.625 54 292.375 54 292.375 51 289 51 289 49 292.375 49 292.375 46 294.625 46 294.625 49">
+                                        </polygon>
                                     </g>
                                 </g>
                             </g>
-                        </svg>
-                    </div>
-                    <div class="text">Add</div>
+                        </g>
+                    </svg>
                 </button>
             </div>
         </div>

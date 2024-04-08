@@ -1,5 +1,5 @@
     <!--popOut add user  model -->
-    <div class="modal fade" id="modal-add-patient">
+    <div class="modal fade" id="modal_add_patient">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -47,8 +47,8 @@
                                     <label for="age">Edad</label>
                                     <input type="text" id="age" name="age"
                                         class="@error('age') error-border @enderror form-control "
-                                        value="{{ old('age') }}" placeholder=" " 
-                                        data-inputmask="'mask': ['99']" data-mask required>
+                                        value="{{ old('age') }}" placeholder=" " data-inputmask="'mask': ['99']"
+                                        data-mask required>
                                     <!-- TODO check if i m working-->
                                     @error('age')
                                         <div class="error">
@@ -59,15 +59,15 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
-                                <div class="form-group">
-                                <label>Genero</label>
-                                <select class="form-control">
-                                <option selected>Seleccione...</option>
-                                <option value="F">Femenino</option>
-                                <option value="M">Masculino</option>
-                                <option value="ND">No definido</option>
-                                </select>
-                                </div>
+                                    <div class="form-group">
+                                        <label>Genero</label>
+                                        <select class="form-control">
+                                            <option selected>Seleccione...</option>
+                                            <option value="F">Femenino</option>
+                                            <option value="M">Masculino</option>
+                                            <option value="ND">No definido</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -133,8 +133,7 @@
                                         <div class="input-group ">
                                             <input type="text" id="phone" name="phone"
                                                 class=" @error('phone') error-border @enderror form-control"
-                                                data-inputmask="'mask': ['999-999-9999']"
-                                                data-mask required>
+                                                data-inputmask="'mask': ['999-999-9999']" data-mask required>
                                             <div class="input-group-append">
                                                 <div class="input-group-text"><i class="fas fa-phone"></i></div>
                                             </div>
@@ -175,7 +174,7 @@
                                     <label for="cuatrimestre">Cuatrimestre</label>
                                     <input type="text" id="cuatrimestre" name="cuatrimestre"
                                         class="@error('cuatrimestre') error-border @enderror form-control "
-                                        value="{{ old('cuatrimestre') }}" placeholder=" " 
+                                        value="{{ old('cuatrimestre') }}" placeholder=" "
                                         data-inputmask="'mask': ['9']" data-mask required>
                                     <!-- TODO check if i m working-->
                                     @error('cuatrimestre')

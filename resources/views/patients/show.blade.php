@@ -229,7 +229,7 @@
             </div>
             <!-- /. Appointment  box -->
 
-            <!-- Lettres d'Orientation Médicale  box -->
+            <!-- Valoracíon Psicologica box -->
             <div class="card card-secondary">
                 <div class="card-header">
                     <h3 class="card-title">Valoracíon Psicologica</h3>
@@ -254,12 +254,10 @@
                                             <th class="sorting_asc" tabindex="0" aria-controls="example1"
                                                 rowspan="1" colspan="1" aria-sort="ascending"
                                                 aria-label="Rendering engine: activate to sort column descending">
-                                                Date
+                                                Fecha
                                             </th>
-
-
                                             <th rowspan="1" colspan="1">
-                                                Content
+                                                Descripción
                                             </th>
                                             <th rowspan="1" colspan="1">
                                                 action
@@ -278,9 +276,10 @@
                                                 <td class="truncate">{{ $ltr['content'] }}</td>
                                                 <td>
                                                     <a href="{{ route('orientationLtr.show', [$ltr->id]) }}"
-                                                        target="_blank" class="btn btn-default"><i
+                                                        target="_blank" class="btn btn-success"><i
                                                             class="fa fa-print"></i>
-                                                        Print</a>
+                                                        Print
+                                                    </a>
                                                 </td>
                                             </tr>
                                             @php
@@ -322,7 +321,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /.Lettres d'Orientation Médicale  box -->
+            <!-- /.Valoracíon Psicologica box -->
         </div>
         <div class="col-md-6">
             <!-- info  medical  box -->
@@ -343,18 +342,16 @@
                             action="{{ route('patients.update', [$patient]) }}" novalidate>
                             @csrf
                             @method('PUT')
-                            <input id="name" name="name" type="text" class=" form-field__input"
-                                placeholder=" " value="{{ old('name', $patient->name) }}" hidden />
-                            <input id="lastname" name="lastname" type="text" class=" form-field__input"
-                                value="{{ old('lastname', $patient->lastname) }}" hidden />
-                            <input id="noSSocial" name="noSSocial" type="text" class=" form-field__input"
-                                value="{{ old('noSSocial', $patient->noSSocial) }}" hidden />
-                            <input type="date" name="dob" required value="{{ old('dob', $patient->dob) }}"
-                                hidden />
+                            <input id="full_name" name="full_name" type="text" class=" form-field__input"
+                                placeholder=" " value="{{ old('full_name', $patient->full_name) }}" hidden />
                             <input id="email" name="email" type="text" class=" form-field__input"
                                 value="{{ old('email', $patient->email) }}"hidden />
                             <input id="phone" name="phone" type="text" class=" form-field__input"
                                 value="{{ old('phone', $patient->phone) }}" hidden />
+                                <input id="cuatrimestre" name="cuatrimestre" type="text" class=" form-field__input"
+                                value="{{ old('cuatrimestre', $patient->cuatrimestre) }}" hidden />
+                                <input id="program_id" name="program_id" type="text" class=" form-field__input"
+                                value="{{ old('program_id', $patient->program_id) }}" hidden />
 
                             <div class="form-group">
                                 <label for="infochat">Información Chat AI</label>
@@ -504,16 +501,13 @@
                                                     @endphp
                                                     <a href={{ $path }}
                                                         onclick="window.open(this.href, '_blank', 'left=50%,top=50%,width=500,height=500,toolbar=1,resizable=1'); return false;"
-                                                        class="btn btn-profile btn-del"
-                                                        style="height: 41px;min-width: 46px;margin: 0px;padding: 0px;"
-                                                        title="preview"><i class="fas fa-external-link-alt"></i>
+                                                        class="btn btn-primary"><i class="fas fa-external-link-alt"></i>
                                                         {{-- <img src="{{ url($path) }}" alt="Image" /> --}}
                                                     </a>
 
 
                                                     <a href="{{ route('scans.download', $scan->id) }}"
-                                                        class="btn btn-app btn-modify"
-                                                        style="height: 41px;min-width: 46px;margin: 0px;padding: 0px;">
+                                                        class="btn btn-warning">
                                                         <i class="fas fa-download"></i>
                                                     </a>
                                                 </td>
@@ -531,7 +525,6 @@
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                         <g id="SVGRepo_iconCarrier">
-                                            <title>plus_mini [#ffffff]</title>
                                             <desc>Created with Sketch.</desc>
                                             <defs> </defs>
                                             <g id="Page-1" stroke="none" stroke-width="1" fill="none"

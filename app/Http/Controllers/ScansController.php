@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\Scan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ScansController extends Controller
 {
@@ -43,6 +44,11 @@ class ScansController extends Controller
 
         $patient = Patient::find($request->patient_id);
         $validated = $request->validated();
+
+        //return $this->storeScan($request);
+        //$destination = str_replace(public_path(), '', 'images/');
+        //$q = $request->image->getRealPath();
+        //return $q;
 
         $patient->scans()->create(
             array_merge(
@@ -115,8 +121,15 @@ class ScansController extends Controller
     }
     private function storeScan($request)
     {
+        //$img = $request->file('image')->store('public/images');
+
+        //$url = Storage::url($img);
+
+        //return $url;
+        //return Storage::put('scan', $request->image);
+
         $imageName = time() . '.' . $request->image->extension();
         // upload image to Public Folder
-        return $request->image->move(public_path('images'), $imageName);
+        return $request->image->move('images', $imageName);
     }
 }

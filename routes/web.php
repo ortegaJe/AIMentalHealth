@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get(
-    '/formulario', function () {
-        return view('form');
+    '/form', function () {
+        return view('chat.form');
     }
 )->name('form');
 

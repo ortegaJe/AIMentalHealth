@@ -62,6 +62,32 @@ class DatabaseSeeder extends Seeder
                 foreach ($users as $key => $user) {
                     User::create($user);
                 }
+
+                // llenar programs tabla
+                $programs = [
+                    ['name' => 'TP Mantenimiento Electromecánico'],
+                    ['name' => 'TP Mantenimiento Electrónico Industrial'],
+                    ['name' => 'TP Operación de Procesos Industriales'],
+                    ['name' => 'TP Mantenimiento de Sistemas Informáticos'],
+                    ['name' => 'TP Instalación y Mantenimiento de Redes de Telecomunicaciones'],
+                    ['name' => 'TP Producción Gráfica y Multimedial'],
+                    ['name' => 'TP Operaciones del Comercio Exterior'],
+                    ['name' => 'TL Gestión de Sistemas Informáticos'],
+                    ['name' => 'TL Gestión de Redes de Telecomunicaciones'],
+                    ['name' => 'TL Automatización Electrónica Industrial'],
+                    ['name' => 'TL Gestión en Seguridad y Salud en el Trabajo'],
+                    ['name' => 'TL Gestión de Procesos Industriales'],
+                    ['name' => 'TL Gestión Gráfica Multimedial'],
+                    ['name' => 'TL Gestión Logística Internacional'],
+                    ['name' => 'TL Gestión Administrativa'],
+                    ['name' => 'P Ingeniería Telemática'],
+                    ['name' => 'P Ingeniería Mecatrónica'],
+                    ['name' => 'P Ingeniería Industrial'],
+                    ['name' => 'P Ingeniería en Seguridad y Salud en el Trabajo'],
+                    ['name' => 'P Diseño Gráfico'],
+                    ['name' => 'P Administración de Negocios Internacionales'],
+                ];
+                DB::table('programs')->insert($programs);
         
                 // insertar paticientes
                 \App\Models\Patient::factory(5)->create();
@@ -78,5 +104,18 @@ class DatabaseSeeder extends Seeder
 
                 // insertar Citas 
                 \App\Models\Appointment::factory(5)->create();
+
+                // llenar questions tabla
+                $questions = [
+                    ['name' => '¿Te sientes con Depresión?'],
+                    ['name' => '¿Has intentado dejar de existir ?'],
+                    ['name' => '¿Abusas del consumo de alcohol u otras Sustancias Psicoactivas?'],
+                    ['name' => '¿Pérdida de pensamiento racional?'],
+                    ['name' => '¿Estás sin apoyo social?'],
+                    ['name' => '¿Tienes un plan elaborado  para dejar de existir  ?'],
+                    ['name' => '¿Estás sin pareja estable?'],
+                    ['name' => '¿Presentas problemas de salud?'],
+                ];
+                DB::table('questions')->insert($questions);
     }
 }

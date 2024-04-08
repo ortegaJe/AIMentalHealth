@@ -101,9 +101,11 @@
             <div class="row">
                 <div class="col-12">
                     <h2 class="page-header">
-                        <i id="logo" class="fas fa-globe"></i> AI Mental Health App
+                        <img src="{{ asset('media/favicons/mhealth-192x192.png') }}" alt="AI Mental Health logo"
+                            width="96px">
+                        AI Mental Health App
                         <small
-                            class="float-right">Date:{{ date('Y-m-d', strtotime($orientataionsltr['updated_at'])) }}</small>
+                            class="float-right">Fecha:{{ date('Y-m-d', strtotime($orientataionsltr['updated_at'])) }}</small>
                     </h2>
                 </div>
                 <!-- /.col -->
@@ -116,17 +118,17 @@
                 <table class="table">
                     <tbody>
                         <tr>
-                            <th id="nomLabel">name:</th>
+                            <th id="nomLabel">Nombre Paciente:</th>
                             <td id="nom">{{ $patient->full_name }}</td>
                             <th id="prenomLabel"></th>
                             <td></td>
                         </tr>
 
                         <tr>
-                            <th>phone:</th>
+                            <th>Telefono:</th>
                             <td>{{ $patient->phone }}</td>
 
-                            <th>Date of birth:</th>
+                            <th>Fecha de Nacimiento:</th>
                             <td>{{ $patient->dob }}</td>
 
 

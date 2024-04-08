@@ -3,7 +3,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">write a new orientation letter</h4>
+                    <h4 class="modal-title">Valoracíon Psicologica</h4>
                 </div>
                 <div class="modal-body">
                     <!-- Main content -->
@@ -37,8 +37,8 @@
 
 
                             <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
-                                <button type="submit" class="btn btn-primary">add</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </form>
                     </div>

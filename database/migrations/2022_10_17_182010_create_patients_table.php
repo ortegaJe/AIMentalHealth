@@ -26,7 +26,6 @@ return new class extends Migration {
                 $table->string('email');
                 $table->unsignedBigInteger('program_id')->nullable();
                 $table->integer('cuatrimestre')->nullable();
-                $table->string('chat_info')->nullable();
                 $table->string('antecedents')->nullable();
                 $table->string('comments')->nullable();
                 $table->timestamps();
