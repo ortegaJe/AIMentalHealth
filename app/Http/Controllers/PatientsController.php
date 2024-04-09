@@ -121,7 +121,9 @@ class PatientsController extends Controller
         // A list of doctor-patient scans
         $scans = $patient->scans()->where('user_id', $doctor_id)->get();
 
-        $programs = $patient::join('programs', 'programs.id', 'patients.program_id')->get(['programs.id as id_program','programs.name as program']);
+        $programs = $patient::join('programs', 'programs.id', 'patients.program_id')
+                                ->where('patients.id', $patient->id)
+                                    ->get(['programs.id as id_program','programs.name as program']);
 
         return view(
             'patients.show',
@@ -144,7 +146,11 @@ class PatientsController extends Controller
      */
     public function edit(Patient $patient)
     {
-        return view('patients.edit', ['patient' => $patient]);
+        $programs = $patient::join('programs', 'programs.id', 'patients.program_id')
+                                ->where('patients.id', $patient->id)
+                                    ->get(['programs.id as id_program','programs.name as program']);
+
+        return view('patients.edit', ['patient' => $patient, 'programs' => $programs]);
     }
 
     /**
@@ -157,11 +163,13 @@ class PatientsController extends Controller
     public function update(Patient $patient, PatientFormRequest $request)
     {
         $validated = $request->validated();
+        //return $validated;
         $patient->update($validated);
 
+        //return $patient;
         return back()
         ->with(
-                'success', 'patients: ' . $patient->name . ' is updated! '
+                'success', 'patients: ' . $patient->full_name . ' is updated! '
             );
     }
 

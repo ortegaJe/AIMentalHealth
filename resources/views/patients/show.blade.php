@@ -40,24 +40,22 @@
                                 <input id="age" name="age" type="text" data-inputmask="'mask': ['99']"
                                     data-mask class="form-control" value="{{ old('age', $patient->age) }}" />
                             </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Genero</label>
-                                        <select class="form-control">
-                                            <option value="F">Femenino</option>
-                                            <option value="M">Masculino</option>
-                                            <option value="ND">No definido</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label>Genero</label>
+                                <select class="form-control">
+                                    <option value="F">Femenino</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="ND">No definido</option>
+                                </select>
                             </div>
-
+                            @php
+                                Carbon\Carbon::parse($patient->dob)->format('m/d/Y');
+                            @endphp
                             <div class="form-group">
                                 <label for="dob">Fecha de Nacimiento</label>
                                 <input type="date" name="dob" id="dob" class="form-control"
-                                    value="{{ old('dob', $patient->dob) }}" required />
+                                    value="{{ old('dob', Carbon\Carbon::parse($patient->dob)->format('m/d/Y')) }}"
+                                    required />
                             </div>
 
                             <div class="form-group">
@@ -105,8 +103,8 @@
 
                             <div class="form-group">
                                 <label for="cuatrimestre">Cuatrimestre</label>
-                                <input id="cuatrimestre" name="cuatrimestre" type="text"
-                                    data-inputmask="'mask': ['9']" data-mask class="form-control"
+                                <input id="cuatrimestre" name="cuatrimestre" type="text" data-inputmask="'mask': ['9']"
+                                    data-mask class="form-control"
                                     value="{{ old('cuatrimestre', $patient->cuatrimestre) }}" />
                             </div>
 
@@ -147,21 +145,21 @@
                                             <th class="sorting_asc" tabindex="0" aria-controls="example1"
                                                 rowspan="1" colspan="1" aria-sort="ascending"
                                                 aria-label="Rendering engine: activate to sort column descending">
-                                                Date</th>
+                                                Fecha</th>
                                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                                 colspan="1" aria-label="Browser: activate to sort column ascending">
-                                                Start time</th>
+                                                Hora Inicio</th>
                                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                                 colspan="1"
                                                 aria-label="Platform(s): activate to sort column ascending">
-                                                end time</th>
+                                                Hora Final</th>
                                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                                 colspan="1"
                                                 aria-label="Engine version: activate to sort column ascending">
-                                                motivation</th>
+                                                Motivo</th>
                                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                                 colspan="1" aria-label="CSS grade: activate to sort column ascending">
-                                                actions</th>
+                                                Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -205,7 +203,6 @@
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                         <g id="SVGRepo_iconCarrier">
-                                            <title>plus_mini [#ffffff]</title>
                                             <desc>Created with Sketch.</desc>
                                             <defs> </defs>
                                             <g id="Page-1" stroke="none" stroke-width="1" fill="none"
@@ -339,7 +336,7 @@
                 <div id="infoMedical" class="card-body" style="display: block;">
                     <div class="card-body">
                         <form class="needs-validation" method="post"
-                            action="{{ route('patients.update', [$patient]) }}" novalidate>
+                            action="{{ route('patients.update', [$patient->id]) }}" novalidate>
                             @csrf
                             @method('PUT')
                             <input id="full_name" name="full_name" type="text" class=" form-field__input"
@@ -348,24 +345,36 @@
                                 value="{{ old('email', $patient->email) }}"hidden />
                             <input id="phone" name="phone" type="text" class=" form-field__input"
                                 value="{{ old('phone', $patient->phone) }}" hidden />
-                                <input id="cuatrimestre" name="cuatrimestre" type="text" class=" form-field__input"
+                            <input id="identification" name="identification" type="text" class=" form-field__input"
+                                value="{{ old('identification', $patient->identification) }}" hidden />
+                            <input id="dob" name="dob" type="text" class=" form-field__input"
+                                value="{{ old('dob', $patient->dob) }}" hidden />
+                            <input id="age" name="age" type="text" class=" form-field__input"
+                                value="{{ old('age', $patient->age) }}" hidden />
+                            <input id="address" name="address" type="text" class=" form-field__input"
+                                value="{{ old('address', $patient->address) }}" hidden />
+                            <input id="city" name="city" type="text" class=" form-field__input"
+                                value="{{ old('city', $patient->city) }}" hidden />
+                            <input id="neighborhood" name="neighborhood" type="text" class=" form-field__input"
+                                value="{{ old('neighborhood', $patient->neighborhood) }}" hidden />
+                            <input id="cuatrimestre" name="cuatrimestre" type="text" class=" form-field__input"
                                 value="{{ old('cuatrimestre', $patient->cuatrimestre) }}" hidden />
-                                <input id="program_id" name="program_id" type="text" class=" form-field__input"
+                            <input id="program_id" name="program_id" type="text" class=" form-field__input"
                                 value="{{ old('program_id', $patient->program_id) }}" hidden />
 
                             <div class="form-group">
                                 <label for="infochat">Información Chat AI</label>
-                                <textarea name="infochat" id="infochat" cols="50" rows="10" class="form-control">{{ old('infochat', $patient->chat_info) }}</textarea>
+                                <textarea name="infochat" id="infochat" cols="50" rows="10" class="form-control">{{-- {{ old('infochat', $patient->chat_info) }} --}}</textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="antecedents">Antecedents</label>
-                                <textarea name="antecedents" id="antecedentes" cols="30" rows="5" class="form-control">{{ old('antecedents', $patient->antecedents) }}</textarea>
+                                <textarea name="antecedents" id="antecedents" cols="30" rows="5" class="form-control">{{ old('antecedents', $patient->antecedents) }}</textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="comments">Comments</label>
-                                <textarea name="comments" id="comentarios" cols="30" rows="5" class="form-control">{{ old('comments', $patient->comments) }}</textarea>
+                                <textarea name="comments" id="comments" cols="30" rows="5" class="form-control">{{ old('comments', $patient->comments) }}</textarea>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success">Actualizar</button>

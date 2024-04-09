@@ -143,8 +143,6 @@
         </button>
     </div>
 
-
-
     <!-- END Appointments -->
     @include('modals._add_appointment')
 @endsection

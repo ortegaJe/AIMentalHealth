@@ -30,9 +30,8 @@ class Patient extends Model
         'dob',
         'phone',
         'email',
-        'diseases',
-        'allergies',
-        'background',
+        'comments',
+        'antecedents',
     ];
 
     public function scans()
