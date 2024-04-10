@@ -9,6 +9,7 @@ use App\Http\Controllers\PrescriptionsController;
 use App\Http\Controllers\ScansController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
+use Jenssegers\Agent\Agent;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get(
     '/form', function () {
+        //php artisan serve --host 192.168.20.31 --port=8000
+/*         $agent = new Agent();
+
+        if ($agent->isMobile())
+        {
+            return 'Is Mobile '. $agent->platform() .' '. 'Browser: '. $agent->browser() . ' ' . request()->ip();
+        }
+
+        if ($agent->isDesktop())
+        {
+            return 'Is Desktop '. $agent->platform()  .' '. 'Browser: '. $agent->browser() . ' ' . request()->ip();
+        } */
+
         return view('chat.form');
     }
 )->name('form');
