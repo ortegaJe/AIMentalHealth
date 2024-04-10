@@ -1,5 +1,5 @@
 @extends('layouts.backend')
-@section('title', 'Users Management')
+@section('title', 'Administrar Usuarios')
 @section('header', 'Lista de Usuarios')
 
 @section('content')
@@ -14,26 +14,26 @@
                                 <tr role="row">
                                     <th class="sorting_asc" tabindex="0" aria-controls="users_table" aria-sort="ascending"
                                         aria-label="Rendering engine: activate to sort column descending">
-                                        first name
+                                        Nombres
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="users_table"
                                         aria-label="Browser: activate to sort column ascending">
-                                        last name
+                                        Apellidos
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="users_table"
                                         aria-label="Platform(s): activate to sort column ascending">
-                                        login
+                                        Login
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="users_table"
                                         aria-label="CSS grade: activate to sort column ascending">
-                                        email
+                                        Email
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="users_table"
                                         aria-label="CSS grade: activate to sort column ascending">
-                                        role
+                                        Rol
                                     </th>
                                     <th>
-                                        Actions
+                                        Acciones
                                     </th>
                                 </tr>
                             </thead>
@@ -48,11 +48,10 @@
                                         <td>{{ $user['lastname'] }}</td>
                                         <td>{{ $user['username'] }}</td>
                                         <td>{{ $user['email'] }}</td>
-                                        <td>{{ $user['role']->name }}</td>
-                                        <td
-                                            style="padding-right: -3.25rem;border-right-width: 0px;height: 37px;width: 95.833px;">
-                                            <a href="{{ route('users.edit', [$user]) }}" class="btn btn-app btn-modify"
-                                                style="height: 41px;min-width: 46px;margin: 0px;padding: 0px;">
+                                        <td class="text-center"><span class="badge badge-{{ $user['role']->name == 'ADMIN' ? 'danger' : 'primary' }} btn-block">{{ $user['role']->name }}</span></td>
+                                        <td style="padding-right: -3.25rem;border-right-width: 0px;height: 37px;width: 95.833px;">
+                                            <a href="{{ route('users.edit', [$user]) }}"
+                                                class="btn btn-success">
                                                 <i class="fas fa-user-edit"></i>
                                             </a>
 
@@ -62,11 +61,10 @@
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <button type="submit" class="btn btn-app  btn-del"
+                                                <button type="submit" class="btn btn-danger"
                                                     style="height: 41px;min-width: 46px;margin-left: 0px;margin-bottom: 0px;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;">
                                                     <i class="fas fa-user-times"></i>
                                                 </button>
-
                                             </form>
                                         </td>
                                     </tr>
@@ -82,8 +80,28 @@
             </div>
             {{-- add user btn  --}}
             <div class="add-btn-container">
-                <button type="button" class="  btn-default add-btn " data-toggle="modal" data-target="#addUser">
-                    <i class="fas fa-user-plus" style="font-size: 29px;margin-bottom: 8px;margin-left: 1px;"></i>
+                <button class="button add-btn" data-toggle="modal" data-target="#addUser">
+                    <svg viewBox="0 -0.5 9 9" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" width="18"
+                        height="18">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <desc>Created with Sketch.</desc>
+                            <defs> </defs>
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
+                                fill-rule="evenodd">
+                                <g id="Dribbble-Light-Preview"
+                                    transform="translate(-345.000000, -206.000000)" fill="#ffffff">
+                                    <g id="icons" transform="translate(56.000000, 160.000000)">
+                                        <polygon id="plus_mini-[#ffffff]"
+                                            points="298 49 298 51 294.625 51 294.625 54 292.375 54 292.375 51 289 51 289 49 292.375 49 292.375 46 294.625 46 294.625 49">
+                                        </polygon>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
                 </button>
             </div>
             {{-- end  add user btn --}}

@@ -1,6 +1,6 @@
 @extends('layouts.backend')
-@section('title', 'Update user' . $user->username)
-@section('header', 'Update user: ' . $user->name . ' ' . $user->lastname)
+@section('title', 'Actualizar Usuario: ' . $user->username)
+@section('header', 'Actualizar Usuario: ' . $user->name . ' ' . $user->lastname)
 
 @section('content')
     <div class="card">
@@ -10,7 +10,7 @@
                 @method('PUT')
 
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Nombre</label>
                     <input id="name" name="name" type="text"
                         class="@error('name') error-border @enderror form-control" value="{{ old('name', $user->name) }}"
                         required />
@@ -21,7 +21,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="lastname">Lastname</label>
+                    <label for="lastname">Apellido</label>
                     <input id="lastname" name="lastname" type="text"
                         class="@error('lastname') error-border @enderror form-control"
                         value="{{ old('lastname', $user->lastname) }}" required />
@@ -32,7 +32,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username">Usuario</label>
                     <input id="username" name="username" type="text"
                         class="@error('username') error-border @enderror form-control"
                         value="{{ old('username', $user->username) }}" required />
@@ -53,13 +53,8 @@
                         </div>
                     @enderror
                 </div>
-                @php
-                    $f = $user->role->value == 1;
-                    var_dump($f);
-                    // echo '<h1>' . $user->role->value == 2 ? 'fuck' : 'sex' . '</h1>';
-                @endphp
                 <div class="form-group">
-                    <label for="role">User role</label>
+                    <label for="role">Rol</label>
                     <select id="role" name="role" class=" @error('role') error-border @enderror form-control"
                         required>
                         @foreach (App\Enums\UserRoles::values() as $key => $value)
@@ -72,7 +67,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">update</button>
+                    <button type="submit" class="btn btn-success">Actualizar</button>
                 </div>
             </form>
         </div>

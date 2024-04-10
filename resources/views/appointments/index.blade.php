@@ -54,9 +54,9 @@
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="Engine version: activate to sort column ascending">
                                         Motivo</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
+{{--                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="Engine version: activate to sort column ascending">
-                                        Estado</th>
+                                        Estado</th> --}}
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="CSS grade: activate to sort column ascending">
                                         actions</th>
@@ -75,9 +75,9 @@
                                         <td>{{ $appointment['start_time'] }}</td>
                                         <td>{{ $appointment['end_time'] }}</td>
                                         <td class="truncate">{{ $appointment['motivation'] }}</td>
-                                        <td>
+{{--                                         <td>
                                             {{ $appointment['status'] == 0 ? 'PENDIENTE' : 'ACTIVO' }}
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             <button type="button"
                                                 onclick="window.location='{{ route('patients.show', [$appointment->patient_id]) }}'"

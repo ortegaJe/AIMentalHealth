@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm">
                                     <div class="form-group">
                                         <label>Genero</label>
                                         <select class="form-control">
@@ -154,7 +154,6 @@
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -169,8 +168,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-2">
-                                <div class="col-sm-6">
+                            <div class="row mb-4">
+                                <div class="col-sm">
                                     <label for="cuatrimestre">Cuatrimestre</label>
                                     <input type="text" id="cuatrimestre" name="cuatrimestre"
                                         class="@error('cuatrimestre') error-border @enderror form-control "

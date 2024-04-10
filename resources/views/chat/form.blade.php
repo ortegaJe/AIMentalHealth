@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm">
                                                 <div class="form-group">
                                                     <label>Genero</label>
                                                     <select class="form-control">
@@ -200,7 +200,7 @@
                                         <div class="row">
                                             <div class="col-sm">
                                                 <div class="form-group">
-                                                    <label>Programa Academico</label>
+                                                    <label>Programa Académico</label>
                                                     <div class="model-field__control">
                                                         <select name='program_id'
                                                             class="select2-form-program-ajax"></select>
@@ -208,8 +208,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row mb-2">
-                                            <div class="col-sm-6">
+                                        <div class="row mb-4">
+                                            <div class="col-sm">
                                                 <label for="cuatrimestre">Cuatrimestre</label>
                                                 <input type="text" id="cuatrimestre" name="cuatrimestre"
                                                     class="@error('cuatrimestre') error-border @enderror form-control "
