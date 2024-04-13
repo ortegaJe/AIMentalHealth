@@ -37,31 +37,35 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-6 mx-auto">
-                    <form class="needs-validation" method="post" action="{{ route('questions.store', $patient->id) }}" novalidate>
-                        @csrf
-                        @method('POST')
-                        <input type="number" id="patient_id" name="patient_id" value="{{ $patient->id }}" hidden>
-                        @foreach ($questions as $question)
-                            <div class="form-group">
-                                <label for="{{ $question->id }}">{{ $question->name }}</label><br>
-                                <input type="radio" id="{{ $question->id }}_si" name="question_{{ $question->id }}"
-                                    value="1">
-                                <label for="{{ $question->id }}_si">Sí</label>
-                                <input type="radio" id="{{ $question->id }}_no" name="question_{{ $question->id }}"
-                                    value="0">
-                                <label for="{{ $question->id }}_no">No</label>
-                            </div>
-                        @endforeach
-                        <button type="submit" class="btn btn-primary">Seguir</button>
-                    </form>
-                    <div class="modal fade" id="myModal1">
+                <div class="col-3 mx-auto">
+                    <div class="modal fade" id="modalQuestions">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header bg-info">
-                                    <h4 class="modal-title">Registra tus datos</h4>
+                                    <h4 class="modal-title">Responde estas preguntas</h4>
                                 </div>
                                 <div class="modal-body">
+                                    <form class="needs-validation" method="POST"
+                                        action="{{ route('questions.store', $patient->id) }}" novalidate>
+                                        @csrf
+                                        @method('POST')
+                                        <input type="number" id="patient_id" name="patient_id"
+                                            value="{{ $patient->id }}" hidden>
+                                        @foreach ($questions as $question)
+                                            <div class="form-group">
+                                                <label for="{{ $question->id }}">{{ $question->name }}</label><br>
+                                                <input type="radio" id="{{ $question->id }}_si"
+                                                    name="question_{{ $question->id }}" value="1">
+                                                <label for="{{ $question->id }}_si">Sí</label>
+                                                <input type="radio" id="{{ $question->id }}_no"
+                                                    name="question_{{ $question->id }}" value="0">
+                                                <label for="{{ $question->id }}_no">No</label>
+                                            </div>
+                                        @endforeach
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary btn-block">Seguir</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -71,8 +75,17 @@
         </div>
     </section>
 
+    <!-- ./wrapper-->
+    @include('inc._users_scripts')
+
     <script>
-        document.getElementById('#myModal1').modal('show');
+        $(document).ready(function() {
+            $("#modalQuestions").modal({
+                show: true,
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
     </script>
 
 </body>

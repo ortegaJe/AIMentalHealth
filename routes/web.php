@@ -24,17 +24,35 @@ use Jenssegers\Agent\Agent;
 
 Route::get(
     '/form', function () {
-        //php artisan serve --host 192.168.20.31 --port=8000
-/*         $agent = new Agent();
+        //php artisan serve --host 192.168.20.31 --port=8000 casa
+        //php artisan serve --host 172.28.8.154 --port=8000 UIB
 
-        if ($agent->isMobile())
+         $agent = new Agent();
+
+/*         if ($agent->isMobile())
         {
-            return 'Is Mobile '. $agent->platform() .' '. 'Browser: '. $agent->browser() . ' ' . request()->ip();
+            return 'Is Mobile '. $agent->platform() .' '. 
+                    'Browser: '. $agent->browser() . ' ' . 
+                     request()->ip();
         }
 
         if ($agent->isDesktop())
         {
-            return 'Is Desktop '. $agent->platform()  .' '. 'Browser: '. $agent->browser() . ' ' . request()->ip();
+            $mystring = request()->ip();
+            $findme   = '.24';
+            $pos = strpos($mystring, $findme);
+
+            // Note our use of ===.  Simply == would not work as expected
+            // because the position of 'a' was the 0th (first) character.
+            if ($pos === false) {
+                return "IP: {$mystring} | Ubicación: Externa";
+                echo "'$findme' was not found in the string '$mystring'";
+            } else {
+                return "IP: {$mystring} | Ubicación: UIB Sede Barranquilla | Is Desktop {$agent->platform()} | Browser: {$agent->browser()}";
+                echo "Ubicación: UIB Barranquilla The string. The string '$findme' was found in the string '$mystring'";
+                echo " and exists at position $pos";
+            }
+
         } */
 
         return view('chat.form');
