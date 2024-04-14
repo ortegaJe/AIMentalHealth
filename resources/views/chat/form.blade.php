@@ -81,7 +81,7 @@
                                             <div class="col-sm">
                                                 <label for="age">Edad</label>
                                                 <input type="text" id="age" name="age"
-                                                    class="@error('age') error-border @enderror form-control "
+                                                    class="@error('age') error-border @enderror form-control"
                                                     value="{{ old('age') }}" placeholder=" "
                                                     data-inputmask="'mask': ['99']" data-mask required>
                                                 <!-- TODO check if i m working-->

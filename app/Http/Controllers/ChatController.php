@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PatientFormRequest;
 use App\Http\Requests\QuestionFormRequest;
 use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -83,31 +84,18 @@ class ChatController extends Controller
                                  DB::raw("CASE WHEN b.confirmed = 1 THEN 'si' ELSE 'no' END as answer")
                                  )->get();*/
 
-/*         $total = 4;
-        $riskStatus = DB::table('question_patient as a')
-                    ->select(
-                        DB::raw("CASE WHEN SUM(a.confirmed) <= 2 THEN 'RIESGO BAJO' 
-                                        WHEN SUM(a.confirmed) <= 4 THEN 'RIESGO MODERADO'
-                                            WHEN SUM(a.confirmed) <= 6 THEN 'RIESGO ALTO'
-                                                WHEN SUM(a.confirmed) <= 8 THEN 'PRECISA INGRESO'
-                                                    ELSE 'SIN PUNTUACIÓN'
-                                                        END as riesgo")
-                        )->where('a.patient_id', $patient->id)->pluck('riesgo');
-
-        return $riskStatus; */
-
-        $total = 5;
+        //$total = 5;
         $riskStatus = DB::table('question_patient as a')
                             ->select(
-                                DB::raw("CASE WHEN $total <= 2 THEN 'RIESGO BAJO' 
-                                                WHEN $total <= 4 THEN 'RIESGO MODERADO'
-                                                    WHEN $total <= 6 THEN 'RIESGO ALTO'
-                                                        WHEN $total <= 8 THEN 'PRECISA INGRESO'
+                                DB::raw("CASE WHEN SUM(a.confirmed) <= 2 THEN 'RIESGO BAJO' 
+                                                WHEN SUM(a.confirmed) <= 4 THEN 'RIESGO MODERADO'
+                                                    WHEN SUM(a.confirmed) <= 6 THEN 'RIESGO ALTO'
+                                                        WHEN SUM(a.confirmed) <= 8 THEN 'PRECISA INGRESO'
                                                             ELSE 'SIN PUNTUACIÓN'
                                                                 END as riesgo")
-                                )->where('.patient_id', $patient->id)->pluck('riesgo')->take(1);
+                                )->where('a.patient_id', $patient->id)->first();
 
-                                //return $riskStatus;
+                               //return $riskStatus;
 
   /*                               $RISK_NAME = $riskStatus;
 
@@ -124,24 +112,41 @@ class ChatController extends Controller
 
                                 return $RISK; */
 
+                                if ($riskStatus->riesgo === 'RIESGO ALTO' || $riskStatus->riesgo === 'PRECISA INGRESO') 
+                                {
+                                    $presentDate = now('America/Bogota')->toDateString();
+                                    $ifExistsAppointment = $patient->appointments()
+                                                            ->where('patient_id', $patient->id)
+                                                            ->where('date', $presentDate)
+                                                            ->get();
 
-                                 if ($riskStatus === 'RIESGO BAJO') {
-                                    return "$riskStatus y recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
-                                }
+                                    //return $ifExistsAppointment;
+
+                                    if (count($ifExistsAppointment) > 0 ) 
+                                    {
+                                        error_log(__LINE__ . __METHOD__ . ' Existe Cita -->' . var_export($ifExistsAppointment, true));
+                                    } else {
+                                        $time = now('America/Bogota');
+                                        $date = $time->isoFormat('Y-M-D');
         
-                                if ($riskStatus === 'RIESGO MODERADO') {
-                                    return "$riskStatus y recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
+                                        $hourFaker = fake()->numberBetween(9, 18);
+                                        $start_time = $time->isoFormat($hourFaker.':mm');
+        
+                                        $hourFaker1 = substr($start_time, 0, -3) + 1;
+                                        $end_time = $time->isoFormat($hourFaker1.':mm');
+        
+                                        $newAppointment = DB::table('appointments')->insert([
+                                                'date' => $date,
+                                                'start_time' => $start_time,
+                                                'end_time' => $end_time,
+                                                'motivation' => $riskStatus->riesgo,
+                                                'user_id' => 1,
+                                                'patient_id' => $patient->id,
+                                                'created_at' => $time,
+                                                'updated_at' => $time
+                                        ]);
+                                    }
                                 }
-
-                                if ($riskStatus === 'RIESGO ALTO') {
-                                    return "$riskStatus y recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
-                                }
-
-                                if ($riskStatus === 'PRECISA INGRESO') {
-                                    return "$riskStatus y recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
-                                }
-
-                                //return $riskStatus;
 
         return view('chat.index', compact('patient'));
     }
@@ -173,34 +178,57 @@ class ChatController extends Controller
                                                         WHEN SUM(a.confirmed) <= 8 THEN 'PRECISA INGRESO'
                                                             ELSE 'SIN PUNTUACIÓN'
                                                                 END as riesgo")
-                                )->where('a.patient_id', $patient->id)->pluck('riesgo')->take(1);
+                                )->where('a.patient_id', $patient->id)->first();
 
-                                 if ($riskStatus === 'RIESGO BAJO') {
-                                    //CONTEXTO DE CADA ESTADO DE RIESGO DEL PACIENTE
-                                    return "Recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
-                                }
-        
-                                if ($riskStatus === 'RIESGO MODERADO') {
-                                    return "Recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
-                                }
+                                error_log(__LINE__ . __METHOD__ . ' ESTADO DE RIESGO --->' . var_export($riskStatus, true));
 
-                                if ($riskStatus === 'RIESGO ALTO') {
-                                    return "Recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
-                                }
+                                // Cita asignada del paciente dependiendo del estado de riesgo
+                                $MyAppointments = $patient->appointments()->where('patient_id', $patient->id)->get();
 
-                                if ($riskStatus === 'PRECISA INGRESO') {
-                                    return "Recomiendale agendar un cita con profesionales del plantel universitario que lo ayudaran mas con su estado.";
-                                }
+                                $presentDate = now('America/Bogota')->toDateString();
+                                $ifExistsAppointment = $patient->appointments()
+                                                        ->where('patient_id', $patient->id)
+                                                        ->where('date', $presentDate)
+                                                        ->get();
 
-                                error_log(__LINE__ . __METHOD__ . ' chat --->' . var_export($riskStatus, true));
-                                //return $riskStatus;
+                                //return $ifExistsAppointment;
+
+                                // Validar si ya tiene cita asignada para el dia de hoy, solo es posible una cita al dia
+                                if (count($ifExistsAppointment) > 0 )
+                                {
+                                    // si ya tiene cita asignada solo se le compartira los datos para saber su cita asignada para el dia
+                                    $newAppointment = $MyAppointments = $patient->appointments()->where('patient_id', $patient->id)->first();
+                                } else {
+                                    // si no tiene cita para el dia de hoy se le asigna una nueva
+                                    $time = now('America/Bogota');
+                                    $date = $time->isoFormat('Y-M-D');
+    
+                                    $hourFaker = fake()->numberBetween(9, 18);
+                                    $start_time = $time->isoFormat($hourFaker.':mm');
+    
+                                    $hourFaker1 = substr($start_time, 0, -3) + 1;
+                                    $end_time = $time->isoFormat($hourFaker1.':mm');
+    
+                                    $newAppointment = DB::table('appointments')->insert([
+                                            'date' => $date,
+                                            'start_time' => $start_time,
+                                            'end_time' => $end_time,
+                                            'motivation' => $riskStatus->riesgo,
+                                            'user_id' => 1,
+                                            'patient_id' => $patient->id,
+                                            'created_at' => $time,
+                                            'updated_at' => $time
+                                    ]);
+                                }
 
         // Condicionar asistente para darle contexto
         $context = [
             "role" => "system",
             "content" => "Eres un psicólogo como asistente de IA (siempre debes describirlo asi) para apoyo emocional y mental que puede predecir las emociones para el ambiente universitario para estudiantes de 18 a 28 años. Solamente se vas atender temas relacionado con la salud mental.
                             Esta es la informacion personal del usuario {$patient}
-                            Dile al usuario que presenta este riesgo {$riskStatus}
+                            Dile al usuario que presenta este riesgo {$riskStatus->riesgo}
+                            Ejecuta este codigo {$newAppointment} cuando el usuario te diga estas palabras [CITA, ASIGNAR CITA, QUIERO UNA CITA, PUEDES AYUDARME CON UNA CITA, QUIERO OTRA] agendar citas solo una sola vez el mismo dia, te penalizo si vuelves a realizar la cita el mismo dia, el usuario solo puede asignar una sola cita el mismo dia, para el dia siguiente si es posible asignar cita, solo le diras estos datos fecha de la cita, hora de inicio si es pm o am nunca lo menciones en formato de horas militares si no con el formato estandar de 12:00 horas. si ya tiene cita asignada le recuerdas.
+                            Dile al usuario la cita agendada que se le asigno {$MyAppointments} solo le diras estos datos fecha de la cita, hora de inicio solamente. Si usas estas palabras tambien le diras [CUAL ES LA FECHA DE MI CITA, CUAL ES LA FECHA DE MI CITA AGENDA, CUAL ES LA FECHA] si ya tiene cita asignada le recuerdas.
                             Si el usuario pregunta que se quiere comunicar con alguien utiliza exclusivamente los numeros telefonicos para sugerir opciones: asociacion01 300277695
                             Si el usuario tiene tendecia suicida alta (pregunta cual es su tendencia) dile que se comunique con alguien utiliza exclusivamente los numeros telefonicos para sugerir opciones: asociacion02 300277695"
         ];
@@ -218,7 +246,8 @@ class ChatController extends Controller
                 ])->post('https://api.openai.com/v1/chat/completions', [
                     "model" => "gpt-3.5-turbo",
                     "messages" => $messages,
-                    "temperature" => 0.7
+                    "temperature" => 0.6, //La temperatura es un parámetro que controla la aleatoriedad en las predicciones del modelo. Temperatura baja (0 a 0.3): Resultados más centrados, coherentes y conservadores. Temperatura media (0.3 a 0.7): Creatividad y coherencia equilibradas. Temperatura alta (0.7 a 1): El modelo tiende a generar respuestas más diversas y creativas, arriesgándose a ser menos coherente y preciso en ciertos contextos.
+                    "max_tokens" => 150 
                 ])->json();
 
                 error_log(__LINE__ . __METHOD__ . ' chat --->' . var_export($response, true));
