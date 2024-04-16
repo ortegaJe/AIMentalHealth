@@ -28,7 +28,7 @@
     <a href="#" class="brand-link">
         <img src="{{ asset('media/favicons/mhealth-192x192.png') }}" alt="AI Mental Health logo"
             class="brand-image img-circle elevation-3" style="max-height: 38px;opacity: .8">
-        <span class="brand-text font-weight-light"><b>AI</b>Mental Health</p></span>
+        <span class="brand-text font-weight-light" style="font-size: 1.1rem;"><b>AVi</b>{{ env('APP_NAME') }}</span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\OrientationLtrController;
 use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\PrescriptionsController;

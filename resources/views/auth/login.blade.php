@@ -8,7 +8,7 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href=" {{ route('login') }}" class="h1"><b>AI</b>Mental Health</a>
+                <a href=" {{ route('login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }}</a>
             </div>
             <div class="card-body">
                 <!-- only include _errors subview if there is errors-->
@@ -58,6 +58,9 @@
                         <!-- /.col -->
                     </div>
                 </form>
+                <p class="mb-0 mt-2">
+                    <a href="register.html" class="text-center">Register a new membership</a>
+                </p>
 
             </div>
             <!-- /.card-body -->

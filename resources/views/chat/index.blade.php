@@ -23,7 +23,7 @@
   <div class="top">
     <img src="{{ asset('media/icons/chatbot.png') }}" width="128" height="128" alt="ai_chatbot">
     <div>
-      <p>AI ChatBot</p>
+      <p>AVi ChatBot</p>
       <small>Online</small>
     </div>
   </div>

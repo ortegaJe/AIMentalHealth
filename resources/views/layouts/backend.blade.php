@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>
-        @yield('title', 'AI Mental Health')
+        @yield('title', 'AVi'.env('APP_NAME'))
     </title>
 
     <!-- Google Font: Source Sans Pro -->

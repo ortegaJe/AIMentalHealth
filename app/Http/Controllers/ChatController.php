@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+use App\Mail\DemoMail;
+use Illuminate\Support\Facades\Mail;
 
 class ChatController extends Controller
 {
@@ -112,6 +114,10 @@ class ChatController extends Controller
 
                                 return $RISK; */
 
+/*                                 $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
+                                $carbon = Carbon::parse();
+                                return  'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A');
+ */
                                 if ($riskStatus->riesgo === 'RIESGO ALTO' || $riskStatus->riesgo === 'PRECISA INGRESO') 
                                 {
                                     $presentDate = now('America/Bogota')->toDateString();
@@ -145,6 +151,17 @@ class ChatController extends Controller
                                                 'created_at' => $time,
                                                 'updated_at' => $time
                                         ]);
+
+                                        $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
+                                        
+                                        $carbon = Carbon::parse();
+                                        // Enviar email con datos de la cita asignada al paciente
+                                        $mailData = [
+                                            'title' => $patient->full_name,
+                                            'body' => 'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A')
+                                        ];
+                                         
+                                        Mail::to($patient->email)->send(new DemoMail($mailData));
                                     }
                                 }
 
