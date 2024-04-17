@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ContextAISystem;
 use App\Http\Requests\PatientFormRequest;
 use App\Http\Requests\QuestionFormRequest;
 use App\Models\Patient;
@@ -72,7 +73,7 @@ class ChatController extends Controller
         
     }
 
-    public function chatPatient(Patient $patient)
+    public function chatPatient(Patient $patient, Request $request)
     {
         /* $questionPatient = DB::table('questions as a')
                         ->leftJoin('question_patient as b', 'b.question_id', 'a.id')
@@ -165,6 +166,14 @@ class ChatController extends Controller
                                     }
                                 }
 
+                                $string = 'agendar una cita';
+                                $word = 'cita';
+                                $cleanContent = strtolower(str_replace(' ', '', $word));
+
+                                    if (str_contains($string, $word)) {
+                                        echo "The string $word was found in the string\n";
+                                    }
+
         return view('chat.index', compact('patient'));
     }
 
@@ -212,9 +221,9 @@ class ChatController extends Controller
 
                                 // Validar si ya tiene cita asignada para el dia de hoy, solo es posible una cita al dia
                                 if (count($ifExistsAppointment) > 0 )
-                                {
+                                {   
                                     // si ya tiene cita asignada solo se le compartira los datos para saber su cita asignada para el dia
-                                    $newAppointment = $MyAppointments = $patient->appointments()->where('patient_id', $patient->id)->first();
+                                    $MyAppointments = $patient->appointments()->where('patient_id', $patient->id)->first();
                                 } else {
                                     // si no tiene cita para el dia de hoy se le asigna una nueva
                                     $time = now('America/Bogota');
@@ -241,13 +250,9 @@ class ChatController extends Controller
         // Condicionar asistente para darle contexto
         $context = [
             "role" => "system",
-            "content" => "Eres un psicólogo como asistente de IA (siempre debes describirlo asi) para apoyo emocional y mental que puede predecir las emociones para el ambiente universitario para estudiantes de 18 a 28 años. Solamente se vas atender temas relacionado con la salud mental.
-                            Esta es la informacion personal del usuario {$patient}
-                            Dile al usuario que presenta este riesgo {$riskStatus->riesgo}
-                            Ejecuta este codigo {$newAppointment} cuando el usuario te diga estas palabras [CITA, ASIGNAR CITA, QUIERO UNA CITA, PUEDES AYUDARME CON UNA CITA, QUIERO OTRA] agendar citas solo una sola vez el mismo dia, te penalizo si vuelves a realizar la cita el mismo dia, el usuario solo puede asignar una sola cita el mismo dia, para el dia siguiente si es posible asignar cita, solo le diras estos datos fecha de la cita, hora de inicio si es pm o am nunca lo menciones en formato de horas militares si no con el formato estandar de 12:00 horas. si ya tiene cita asignada le recuerdas.
-                            Dile al usuario la cita agendada que se le asigno {$MyAppointments} solo le diras estos datos fecha de la cita, hora de inicio solamente. Si usas estas palabras tambien le diras [CUAL ES LA FECHA DE MI CITA, CUAL ES LA FECHA DE MI CITA AGENDA, CUAL ES LA FECHA] si ya tiene cita asignada le recuerdas.
-                            Si el usuario pregunta que se quiere comunicar con alguien utiliza exclusivamente los numeros telefonicos para sugerir opciones: asociacion01 300277695
-                            Si el usuario tiene tendecia suicida alta (pregunta cual es su tendencia) dile que se comunique con alguien utiliza exclusivamente los numeros telefonicos para sugerir opciones: asociacion02 300277695"
+            "content" => ContextAISystem::CONTEXT_SYSTEM.
+                         "- Esta es la informacion o datos personales del usuario {$patient}
+                          - Dile al usuario la cita agendada que se le asigno {$MyAppointments} solo le diras estos datos fecha de la cita, hora de inicio solamente. Si usas estas palabras tambien le diras [CUAL ES LA FECHA DE MI CITA, CUAL ES LA FECHA DE MI CITA AGENDA, CUAL ES LA FECHA] si ya tiene cita asignada le recuerdas.",
         ];
         // Agregar el contexto inicial al arreglo de mensajes
         $messages = [$context];
