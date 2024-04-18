@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ContextAISystem;
 use App\Http\Requests\PatientFormRequest;
 use App\Http\Requests\QuestionFormRequest;
+use App\Mail\AlertEmail;
 use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use Throwable;
 use App\Mail\DemoMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ChatController extends Controller
 {
@@ -100,27 +103,19 @@ class ChatController extends Controller
 
                                //return $riskStatus;
 
-  /*                               $RISK_NAME = $riskStatus;
-
-                                $RISK_TYPE = [
-                                    $RISK_NAME => 'RIESGO BAJO',
-                                    $RISK_NAME => 'RIESGO MODERADO',
-                                    $RISK_NAME => 'RIESGO ALTO',
-                                    $RISK_NAME => 'RIESGO PRECISA INGRESO',
-                                ];
-
-                                $RISK_DEFAULT = 'SIN PUNTUACION';
-
-                                $RISK = $RISK_TYPE[$RISK_NAME] || $RISK_DEFAULT;
-
-                                return $RISK; */
-
-/*                                 $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
-                                $carbon = Carbon::parse();
-                                return  'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A');
- */
                                 if ($riskStatus->riesgo === 'RIESGO ALTO' || $riskStatus->riesgo === 'PRECISA INGRESO') 
                                 {
+                                    $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
+                                        
+                                    $carbon = Carbon::parse();
+                                    // Enviar email con datos de la cita asignada al paciente
+                                    $mailData = [
+                                        'title' => $patient->full_name,
+                                        //'body' => 'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A')
+                                    ];
+                                     
+                                    //Mail::to('admisiones@mentalhealth.ai.com')->send(new AlertEmail($mailData));
+                                    
                                     $presentDate = now('America/Bogota')->toDateString();
                                     $ifExistsAppointment = $patient->appointments()
                                                             ->where('patient_id', $patient->id)
@@ -129,7 +124,7 @@ class ChatController extends Controller
 
                                     //return $ifExistsAppointment;
 
-                                    if (count($ifExistsAppointment) > 0 ) 
+                                /*  if (count($ifExistsAppointment) > 0 )
                                     {
                                         error_log(__LINE__ . __METHOD__ . ' Existe Cita -->' . var_export($ifExistsAppointment, true));
                                     } else {
@@ -152,27 +147,8 @@ class ChatController extends Controller
                                                 'created_at' => $time,
                                                 'updated_at' => $time
                                         ]);
-
-                                        $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
-                                        
-                                        $carbon = Carbon::parse();
-                                        // Enviar email con datos de la cita asignada al paciente
-                                        $mailData = [
-                                            'title' => $patient->full_name,
-                                            'body' => 'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A')
-                                        ];
-                                         
-                                        Mail::to($patient->email)->send(new DemoMail($mailData));
-                                    }
+                                    } */
                                 }
-
-                                $string = 'agendar una cita';
-                                $word = 'cita';
-                                $cleanContent = strtolower(str_replace(' ', '', $word));
-
-                                    if (str_contains($string, $word)) {
-                                        echo "The string $word was found in the string\n";
-                                    }
 
         return view('chat.index', compact('patient'));
     }
@@ -226,38 +202,61 @@ class ChatController extends Controller
                                     $MyAppointments = $patient->appointments()->where('patient_id', $patient->id)->first();
                                 } else {
                                     // si no tiene cita para el dia de hoy se le asigna una nueva
-                                    $time = now('America/Bogota');
-                                    $date = $time->isoFormat('Y-M-D');
+                                    $string = $request->post('content');
+                                    $magicWord = 'cita';
+                                    $cleanContent = strtolower(str_replace(' ', '', $string));
+                                    error_log(__LINE__ . __METHOD__ . ' encontro palabra cita --->' . var_export($cleanContent, true));
     
-                                    $hourFaker = fake()->numberBetween(9, 18);
-                                    $start_time = $time->isoFormat($hourFaker.':mm');
-    
-                                    $hourFaker1 = substr($start_time, 0, -3) + 1;
-                                    $end_time = $time->isoFormat($hourFaker1.':mm');
-    
-                                    $newAppointment = DB::table('appointments')->insert([
-                                            'date' => $date,
-                                            'start_time' => $start_time,
-                                            'end_time' => $end_time,
-                                            'motivation' => $riskStatus->riesgo,
-                                            'user_id' => 1,
-                                            'patient_id' => $patient->id,
-                                            'created_at' => $time,
-                                            'updated_at' => $time
-                                    ]);
+                                        if (str_contains($string, $magicWord)) {
+                                            $time = now('America/Bogota');
+                                            $date = $time->isoFormat('Y-M-D');
+            
+                                            $hourFaker = fake()->numberBetween(9, 18);
+                                            $start_time = $time->isoFormat($hourFaker.':mm');
+            
+                                            $hourFaker1 = substr($start_time, 0, -3) + 1;
+                                            $end_time = $time->isoFormat($hourFaker1.':mm');
+            
+                                            $newAppointment = DB::table('appointments')->insert([
+                                                    'date' => $date,
+                                                    'start_time' => $start_time,
+                                                    'end_time' => $end_time,
+                                                    'motivation' => $riskStatus->riesgo,
+                                                    'user_id' => 1,
+                                                    'patient_id' => $patient->id,
+                                                    'created_at' => $time,
+                                                    'updated_at' => $time
+                                            ]);
+
+                                            // Enviar email con datos de la cita asignada al paciente
+                                            $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
+                                        
+                                            $carbon = Carbon::parse();
+                                            $mailData = [
+                                                'title' => $patient->full_name,
+                                                'body' => 'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A')
+                                            ];
+                                             
+                                            Mail::to($patient->email)->send(new DemoMail($mailData));
+                                        }
                                 }
 
         // Condicionar asistente para darle contexto
         $context = [
             "role" => "system",
-            "content" => ContextAISystem::CONTEXT_SYSTEM.
-                         "- Esta es la informacion o datos personales del usuario {$patient}
-                          - Dile al usuario la cita agendada que se le asigno {$MyAppointments} solo le diras estos datos fecha de la cita, hora de inicio solamente. Si usas estas palabras tambien le diras [CUAL ES LA FECHA DE MI CITA, CUAL ES LA FECHA DE MI CITA AGENDA, CUAL ES LA FECHA] si ya tiene cita asignada le recuerdas.",
+            "content" => ContextAISystem::CONTEXT_SYSTEM .
+                         "- Esta es la informacion o datos personales del USUARIO {$patient} .
+                          - Esta es la informacion de la cita asignada del USUARIO {$MyAppointments}.
+                          - Informa al USUARIO la cita agendada que se le asigno {$MyAppointments}, si te pregunta, solo le diras estos datos 'FECHA' de la cita, 'HORA' solamente la hora se la diras en formato de 12 horas.",
         ];
         // Agregar el contexto inicial al arreglo de mensajes
         $messages = [$context];
 
-            while(true) {
+                while(true) {
+                // Obtener el contenido actual del archivo JSON
+                $filePath = public_path('conversation.json');
+                //$messages = json_decode(File::get($filePath), true);
+
                 $content = $request->post('content');
                 // Agregar el mensaje del usuario al array de mensajes
                 $messages[] = ["role" => "user", "content" => $content];
@@ -272,14 +271,24 @@ class ChatController extends Controller
                     "max_tokens" => 150 
                 ])->json();
 
-                error_log(__LINE__ . __METHOD__ . ' chat --->' . var_export($response, true));
-
+                //error_log(__LINE__ . __METHOD__ . ' chat --->' . var_export($response, true));
 
                 $response_content = $response['choices'][0]['message']['content'];
 
                 $messages[] = ["role" => "assistant", "content" => $response_content];
 
+               /*  $storeChat = DB::table('chats')->insert([
+                    'chat_info'  =>  $response_content,
+                    'user_info'  =>  $content,
+                    'patient_id' => $patient->id,
+                    'created_at' => now('America/Bogota'),
+                    'updated_at' => now('America/Bogota')
+            ]); */
+
+                // Guardar el contenido actualizado en el archivo JSON
+                File::put($filePath, json_encode($messages));
+
                 return response()->json($response_content);
-        }
+            }
     }
 }

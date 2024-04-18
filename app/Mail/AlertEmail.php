@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class DemoMail extends Mailable
+class AlertEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,6 +18,7 @@ class DemoMail extends Mailable
     /**
      * Create a new message instance.
      */
+
     public function __construct($mailData)
     {
         $this->mailData = $mailData;
@@ -29,7 +30,7 @@ class DemoMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Cita asignada - AVi Mental Health Portal',
+            subject: 'Alerta de Riesgo - AVi ChatBot',
         );
     }
 
@@ -39,7 +40,7 @@ class DemoMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.index',
+            view: 'emails.alert',
         );
     }
 

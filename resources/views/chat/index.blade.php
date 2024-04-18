@@ -69,63 +69,66 @@
 </div>
 </body>
 
-{{-- <script>
-  //Broadcast messages
-  $("form").submit(function (event) {
+<script>
+  // Broadcast messages
+  document.querySelector("form").addEventListener("submit", function (event) {
     event.preventDefault();
 
-    //Stop empty messages
-    if ($("form #message").val().trim() === '') {
+    // Stop empty messages
+    if (document.querySelector("form #message").value.trim() === '') {
       return;
     }
 
-    //Disable form
-    $("form #message").prop('disabled', true);
-    $("form button").prop('disabled', true);
+    // Disable form
+    document.querySelector("form #message").disabled = true;
+    document.querySelector("form button").disabled = true;
 
-    $.ajax({
-      url: "/chat",
+    fetch('/chat-services', {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         'X-CSRF-TOKEN': "{{csrf_token()}}"
       },
-      data: {
-        "model": "gpt-3.5-turbo",
-        "content": $("form #message").val(),
-        "context": $(".message").toArray().map(function(message) {
-          return {
-            "role": $(message).hasClass("right") ? "user" : ($(message).hasClass("left") ? "system" : "assistant"),
-            "content": $(message).find("p").text()
-          };
-        })
-      }
-    }).done(function (res) {
+      body: JSON.stringify({
+        content: document.querySelector("form #message").value,
+        patient: document.querySelector("#patient_id").value
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      // Populate sending message
+      const sendingMessage = '<div class="right message">' +
+        '<p>' + document.querySelector("form #message").value + '</p>' +
+        '<img src="{{ asset('media/icons/chatuser.png') }}" alt="ai-chat">' +
+        '</div>';
 
-      //Populate sending message
-      $(".messages > .message").last().after('<div class="right message">' +
-        '<p>' + $("form #message").val() + '</p>' +
-        '<img src="https://assets.edlin.app/images/rossedlin/03/rossedlin-03-100.jpg" alt="Avatar">' +
-        '</div>');
+      // Populate receiving message
+      const receivingMessage = '<div class="left message">' +
+        '<img src="{{ asset('media/icons/chatbot.png') }}" alt="ai-chat">' +
+        '<p>' + data + '</p>' +
+        '</div>';
 
-      //Populate receiving message
-      $(".messages > .message").last().after('<div class="left message">' +
-        '<img src="https://assets.edlin.app/images/rossedlin/03/rossedlin-03-100.jpg" alt="Avatar">' +
-        '<p>' + res.response.choices[0].message.content + '</p>' +
-        '</div>');
+      // Append messages
+      document.querySelector(".messages").insertAdjacentHTML('beforeend', sendingMessage);
+      document.querySelector(".messages").insertAdjacentHTML('beforeend', receivingMessage);
 
-      //Cleanup
-      $("form #message").val('');
-      $(document).scrollTop($(document).height());
+      // Cleanup
+      document.querySelector("form #message").value = '';
+      window.scrollTo(0, document.body.scrollHeight);
 
-      //Enable form
-      $("form #message").prop('disabled', false);
-      $("form button").prop('disabled', false);
+      // Enable form
+      document.querySelector("form #message").disabled = false;
+      document.querySelector("form button").disabled = false;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle error
     });
   });
+</script>
 
-</script> --}}
-
-<script>
+{{-- <script>
   //Broadcast messages
   $("form").submit(function (event) {
     event.preventDefault();
@@ -173,6 +176,6 @@
     });
   });
 
-</script>
+</script> --}}
 
 </html>

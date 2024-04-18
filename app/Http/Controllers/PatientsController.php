@@ -8,6 +8,7 @@ use App\Models\Patient;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 
 class PatientsController extends Controller
@@ -105,6 +106,29 @@ class PatientsController extends Controller
      */
     public function show(Patient $patient)
     {
+                // Obtener la ruta del archivo JSON
+        $filePath = public_path('conversation.json');
+
+        // Verificar si el archivo existe
+        if (File::exists($filePath)) {
+            // Leer el contenido del archivo JSON
+            $jsonContent = File::get($filePath);
+
+            // Decodificar el contenido JSON en un array PHP
+            $messages = json_decode($jsonContent, true);
+
+            // Ahora puedes utilizar el array $messages en tu consulta o en cualquier parte de tu aplicación
+            // Por ejemplo, puedes recorrer el array para mostrar cada mensaje
+            foreach ($messages as $message) {
+                $role = $message['role'];
+                $content = $message['content'];
+
+                // Aquí puedes utilizar $role y $content como desees
+                echo "Role: $role, Content: $content <br>";
+            }
+        } else {
+            echo "El archivo JSON no existe.";
+        }
 
         // current doctor ID
         $doctor_id = Auth::user()->id;
