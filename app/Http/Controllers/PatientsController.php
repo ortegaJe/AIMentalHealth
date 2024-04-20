@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-
+use Illuminate\Support\Facades\Storage;
 
 class PatientsController extends Controller
 {
@@ -106,28 +106,40 @@ class PatientsController extends Controller
      */
     public function show(Patient $patient)
     {
-                // Obtener la ruta del archivo JSON
-        $filePath = public_path('conversation.json');
+        // Obtener la ruta del archivo JSON
+        $folderPath = 'public/chats/'.$patient->identification.'/';
+        $fileName = 'chat.json';
+        $filePath = $folderPath . $fileName;
+
+        // Variable para almacenar los mensajes
+        $messagesHtml = '';
 
         // Verificar si el archivo existe
-        if (File::exists($filePath)) {
+        if (Storage::exists($filePath)) {
             // Leer el contenido del archivo JSON
-            $jsonContent = File::get($filePath);
+            $jsonContent = Storage::get($filePath);
 
             // Decodificar el contenido JSON en un array PHP
             $messages = json_decode($jsonContent, true);
 
-            // Ahora puedes utilizar el array $messages en tu consulta o en cualquier parte de tu aplicación
-            // Por ejemplo, puedes recorrer el array para mostrar cada mensaje
+            // Utilizar el array $messages en tu consulta o en cualquier parte de tu aplicación
+            // Recorrer el array para mostrar cada mensaje
             foreach ($messages as $message) {
                 $role = $message['role'];
                 $content = $message['content'];
+                $date = $message['date'];
 
-                // Aquí puedes utilizar $role y $content como desees
-                echo "Role: $role, Content: $content <br>";
+                ($role === 'user') ? $roleName = '<span class="badge badge-primary"><i class="nav-icon fas fa-user"></i> Estudiante</span>' : 
+                    (($role === 'assistant') ? $roleName = '<span class="badge badge-success"><i class="nav-icon fas fa-robot"></i> AVi ChatBot</span>' : 
+                        'rol no definido');
+
+                //echo "Role: $role, Content: $content <br>";
+                // Construir la respuesta HTML
+                $messagesHtml .= "$roleName: $content <br> <span class='text-muted'>$date</span> <br>";
             }
         } else {
-            echo "El archivo JSON no existe.";
+            //echo "El archivo JSON no existe.";
+            $messagesHtml = "El archivo JSON no existe.";
         }
 
         // current doctor ID
@@ -158,6 +170,7 @@ class PatientsController extends Controller
                 'scans'=>$scans,
                 'orientationLtrs'=>$orientationLtrs,
                 'programs' => $programs,
+                'messagesHtml' => $messagesHtml
             ]
         );
     }

@@ -2,6 +2,18 @@
 @section('title', 'Patients Management')
 @section('header', 'Perfil del Paciente')
 
+@push('css')
+    <style>
+        #infochat {
+            border: 1px solid #ccc;
+            padding: 5px;
+            width: 100%;
+            height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-md-6">
@@ -171,7 +183,7 @@
                                                 <td>{{ $appointment['start_time'] }}</td>
                                                 <td>{{ $appointment['end_time'] }}</td>
                                                 <td class="truncate">{{ $appointment['motivation'] }}</td>
-                                                    {{-- <a href="{{ route('scans.show', [$appointment->id]) }}"
+                                                {{-- <a href="{{ route('scans.show', [$appointment->id]) }}"
                                             class="btn btn-profile btn-del"
                                             style="height: 41px;min-width: 46px;margin: 0px;padding: 0px;"
                                             title="preview"><i class="fas fa-external-link-alt"></i></a>
@@ -355,17 +367,19 @@
                                 value="{{ old('program_id', $patient->program_id) }}" hidden />
 
                             <div class="form-group">
-                                <label for="infochat">Información Chat AI</label>
-                                <textarea name="infochat" id="infochat" cols="50" rows="10" class="form-control">{{-- {{ old('infochat', $patient->chat_info) }} --}}</textarea>
+                                <label for="infochat">Conversación con AVi ChatBot</label>
+                                <div id="infochat" contenteditable="false">
+                                    {!! $messagesHtml !!}
+                                </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="antecedents">Antecedents</label>
+                                <label for="antecedents">Antecedentes</label>
                                 <textarea name="antecedents" id="antecedents" cols="30" rows="5" class="form-control">{{ old('antecedents', $patient->antecedents) }}</textarea>
                             </div>
 
                             <div class="form-group">
-                                <label for="comments">Comments</label>
+                                <label for="comments">Comentarios</label>
                                 <textarea name="comments" id="comments" cols="30" rows="5" class="form-control">{{ old('comments', $patient->comments) }}</textarea>
                             </div>
                             <div class="form-group">

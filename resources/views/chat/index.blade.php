@@ -83,6 +83,10 @@
     document.querySelector("form #message").disabled = true;
     document.querySelector("form button").disabled = true;
 
+    // Capturar fecha de la respuesta
+    const d = new Date();
+    let date = d.getDate() +'-'+ (d.getMonth() + 1) + '-' + d.getFullYear() + ' ' + d.toLocaleTimeString();
+
     fetch('/chat-services', {
       method: 'POST',
       headers: {
@@ -91,7 +95,8 @@
       },
       body: JSON.stringify({
         content: document.querySelector("form #message").value,
-        patient: document.querySelector("#patient_id").value
+        patient: document.querySelector("#patient_id").value,
+        date: date,
       })
     })
     .then(response => response.json())

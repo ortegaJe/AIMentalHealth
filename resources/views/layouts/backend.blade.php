@@ -35,6 +35,8 @@
 
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
+    @stack('css')
+
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse">
