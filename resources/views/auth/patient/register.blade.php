@@ -86,7 +86,7 @@
 
                     </div>
                 </form>
-                <a href="{{ route('login') }}" class="text-center">I already have a membership</a>
+                <a href="{{ route('patient.login') }}" class="text-center">I already have a membership</a>
             </div>
 
         </div>

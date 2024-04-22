@@ -51,11 +51,17 @@ class RegisterController extends Controller
             'password' => hash::make($realPassword),
         ]);
 
+        //return $patient;
+
         $mailData = [
             'full_name' => $patient->full_name,
             'email' => $patient->email,
             'password' => $realPassword,
         ];
+
+        //3jYUh8s4TG8Qphr
+        //your.email+fakedata26705@gmail.com
+        //YJTAN000
             
         Mail::to($patient->email)->send(new CredentialMail($mailData));
 

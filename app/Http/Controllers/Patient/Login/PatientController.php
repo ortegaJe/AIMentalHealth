@@ -34,7 +34,9 @@ class PatientController extends Controller
                 //return 'La autenticación fue exitosa';
                 return redirect()->route('patient.home');
             } else {
-                return redirect()->route('questions', ['patient_id', $patient_id]);
+                //$patient_id = Auth::guard('patient')->user()->id;
+                $patient = Patient::where('id', $patient_id)->first('id');
+                return redirect()->route('questions', ['patient' => $patient]);
             }
 
         } else {
