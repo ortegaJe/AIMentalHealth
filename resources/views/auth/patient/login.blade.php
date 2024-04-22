@@ -8,14 +8,14 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href=" {{ route('login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }}</a>
+                <a href=" {{ route('patient.login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }}</a>
             </div>
             <div class="card-body">
                 <!-- only include _errors subview if there is errors-->
                 @includeWhen($errors->any(), 'inc._errors')
                 <p class="login-box-msg">Sign in to start your session</p>
 
-                <form action=" {{ route('login') }}" method="post" autocomplete="off">
+                <form action="{{ route('patient.authenticate') }}" method="post" autocomplete="off">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="email" name="email" class="form-control @error('email') error-border @enderror"
@@ -59,6 +59,7 @@
                     </div>
                 </form>
                 <p class="mb-0 mt-2">
+                    <a href="{{ route('patient.register') }}" class="text-center">Registrar</a>
                 </p>
 
             </div>

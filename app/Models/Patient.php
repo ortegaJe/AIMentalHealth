@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Enums\UserRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens;
+//use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-
-
-class Patient extends Model
+class Patient extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Notifiable;
+    use HasFactory, Notifiable;
+    
+    protected $table = 'patients';
+    protected $guard = 'patient';
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +34,29 @@ class Patient extends Model
         'email',
         'comments',
         'antecedents',
+        'role',
+        'token',
+        'password',
+        'role'
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'role'=>UserRoles::class,
     ];
 
     public function scans()

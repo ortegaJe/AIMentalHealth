@@ -6,6 +6,7 @@ enum UserRoles: int
     case DOCTOR     = 0;
     case SECRETARY  = 1;
     case ADMIN      = 2;
+    case PATIENT    = 3;
 
     public static function values(): array
     {
@@ -23,5 +24,9 @@ enum UserRoles: int
     public static  function isAdmin( UserRoles $useRole)
     {
         return $useRole->value == UserRoles::ADMIN->value;
+    }
+    public static  function isPatient( UserRoles $useRole)
+    {
+        return $useRole->value == UserRoles::PATIENT->value;
     }
 }

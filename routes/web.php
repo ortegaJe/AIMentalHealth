@@ -4,8 +4,10 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OrientationLtrController;
+use App\Http\Controllers\Patient\Login\PatientController as AuthPatientController;
 use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\PrescriptionsController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ScansController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +23,17 @@ use Jenssegers\Agent\Agent;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('patient/login', [AuthPatientController::class, 'login'])->name('patient.login');
+Route::post('patient/authenticate', [AuthPatientController::class, 'authenticate'])->name('patient.authenticate');
+Route::get('patient/home', [AuthPatientController::class, 'home'])->name('patient.home');
+Route::get('patient/logout', [AuthPatientController::class, 'logout'])->name('patient.logout');
+Route::get('patient/register',  [RegisterController::class, 'index'])->name('patient.register')->middleware('guest');
+Route::post('patient/register/store',  [RegisterController::class, 'store'])->name('patient.register.store')->middleware('guest');
+Route::get('patient/questions/{patient}', [ChatController::class, 'questionPatient'])->name('questions');
+Route::post('/save-questions/{patient}', [ChatController::class, 'storeQuestionPatient'])->name('questions.store');
+Route::get('/chat/{patient}', [ChatController::class, 'chatPatient'])->name('chat');
+Route::post('/chat-services', [ChatController::class, 'serviceChatPatient']);
 
 Route::get(
     '/form', function () {
@@ -68,14 +81,6 @@ Route::post('/save-patients-form', [ChatController::class, 'savePatientForm'])
 ->name(
     'form.savePatientForm'
 );
-
-Route::get('/questions/{patient}', [ChatController::class, 'questionPatient'])->name('questions');
-
-Route::post('/save-questions/{patient}', [ChatController::class, 'storeQuestionPatient'])->name('questions.store');
-
-Route::get('/chat/{patient}', [ChatController::class, 'chatPatient'])->name('chat');
-
-Route::post('/chat-services', [ChatController::class, 'serviceChatPatient']);
 
 Route::get(
     '/', function () {
@@ -126,6 +131,15 @@ Route::middleware(['auth', 'user-role:DOCTOR|SECRETARY|ADMIN'])->group(
     }
 );
 
+Route::middleware(['auth', 'user-role:SECRETARY|ADMIN'])->group(
+    function () {
+        Route::post('/users/find', [UsersController::class, 'findByQuery'])
+            ->name(
+                'users.findByQuery'
+            );
+    }
+);
+
 Route::match (['get', 'post'], '/login',  [AuthController::class, 'login'])
     ->name(
         'login'
@@ -141,12 +155,3 @@ Route::get('/logout', [AuthController::class, 'logout'])
     ->middleware(
         'auth'
     );
-
-    Route::middleware(['auth', 'user-role:SECRETARY|ADMIN'])->group(
-    function () {
-        Route::post('/users/find', [UsersController::class, 'findByQuery'])
-            ->name(
-                'users.findByQuery'
-            );
-    }
-);

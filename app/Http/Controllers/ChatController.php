@@ -46,7 +46,7 @@ class ChatController extends Controller
     {   
         $questions = DB::table('questions')->get(['id','name']);
 
-        return view('chat.question', compact('patient', 'questions'));
+        return view('patient-home.question', compact('patient', 'questions'));
     }
 
     public function storeQuestionPatient(QuestionFormRequest $request, Patient $patient)
