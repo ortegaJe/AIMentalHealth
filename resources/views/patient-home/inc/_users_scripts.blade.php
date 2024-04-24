@@ -138,30 +138,7 @@
         $('.select2-program-ajax').select2({
 
             ajax: {
-                url: "{{ route('programs.findByQueryProgram') }}",
-                type: 'post',
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        _token: token,
-                        queryTerm: params.term,
-                    };
-                },
-                processResults: function(response) {
-                    return {
-                        results: response
-                    }
-                },
-                // cache: true
-            }
-        });
-
-        // 4. get the programa whose name match the query provided for form question
-        $('.select2-form-program-ajax').select2({
-
-            ajax: {
-                url: "{{ route('form.programs.findByQueryProgram') }}",
+                url: "{{ route('programs.findByQuery') }}",
                 type: 'post',
                 dataType: 'json',
                 delay: 250,

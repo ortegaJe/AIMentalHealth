@@ -5,7 +5,7 @@
     <div class="register-box mx-auto align-self-center">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href=" {{ route('patient.login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }}</a>
+                <a href=" {{ route('patient.login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }} - Students</a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Register a new membership</p>
@@ -74,8 +74,8 @@
                         <div class="col-8">
                             <div class="icheck-primary">
                                 <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                                <label for="agreeTerms">
-                                    I agree to the <a href="#">terms</a>
+                                <label for="agreeTerms" style="font-size: 10px">
+                                    Acepto los términos del servicio, <a href="#">la política de privacidad y ley de datos personales.</a>
                                 </label>
                             </div>
                         </div>

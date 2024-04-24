@@ -27,6 +27,7 @@ class PatientController extends Controller
         //return dd(Auth::guard('patients')->attempt($credentials));
 
         if (Auth::guard('patient')->attempt($credentials)) {
+            $request->session()->regenerate();
             $patient_id = Auth::guard('patient')->user()->id;
             $patient = DB::table('question_patient')->where('patient_id', $patient_id)->exists();
     

@@ -30,6 +30,7 @@ class AlertEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
+            from: 'avi.chatbot@mentalhealth.ai.com',
             subject: 'Alerta de Riesgo - AVi ChatBot',
         );
     }

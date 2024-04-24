@@ -8,7 +8,7 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href=" {{ route('patient.login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }}</a>
+                <a href=" {{ route('patient.login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }} - Students</a>
             </div>
             <div class="card-body">
                 <!-- only include _errors subview if there is errors-->

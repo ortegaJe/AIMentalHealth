@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\UserRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 //use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\Patient as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Patient extends Authenticatable

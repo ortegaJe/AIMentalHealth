@@ -8,9 +8,9 @@
         <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href=" {{ route('login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }}</a>
+                <a href=" {{ route('login') }}" class="h1"><b>AVi</b>{{ env('APP_NAME') }} - Staff</a>
             </div>
-            <div class="card-body">
+            <div class="card-body"
                 <!-- only include _errors subview if there is errors-->
                 @includeWhen($errors->any(), 'inc._errors')
                 <p class="login-box-msg">Sign in to start your session</p>

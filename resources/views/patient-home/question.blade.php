@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="../../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
 </head>
 
 <body>

@@ -14,48 +14,40 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 use App\Mail\DemoMail;
+use App\Models\User;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Jenssegers\Agent\Agent;
 
 class ChatController extends Controller
 {
-    public function findByQueryProgram(Request $request)
-    {
-        $result = DB::table('programs')->select('id', DB::raw("name as text"))
-            ->where(
-                'name',
-                'LIKE', '%' . request('queryTerm') . '%'
-            )
-            ->get(
-            );
-        return response()->json($result);
-    }
-
-    public function savePatientForm(PatientFormRequest $request)
-    {
-        $validated = $request->validated();
-        $patient = Patient::create($validated);
-
-        return redirect()->route('questions',['patient' => $patient]);
-    }
-
     public function questionPatient(Patient $patient)
-    {   
+    {               
         $questions = DB::table('questions')->get(['id','name']);
 
         return view('patient-home.question', compact('patient', 'questions'));
     }
 
     public function storeQuestionPatient(QuestionFormRequest $request, Patient $patient)
-    {   
+    { 
         //$validator = Validator::make($request->all(), ['required'], ['Todas las preguntas deben ser respondidas para poder enviar el sondeo.']);
         //return $validator->validate();
 
         //$validated = $request->validated();
         //return $validated;
+
+        //php artisan serve --host 192.168.20.31 --port=8000 casa
+        //php artisan serve --host 172.28.8.154 --port=8000 UIB
+        $agent = new Agent();
+        // Determina el tipo de dispositivo
+        $deviceType = ($agent->isDesktop()) ? 'Desktop' : (($agent->isMobile()) ? 'Mobile' : 'Otro');
+        // Determinar la ubicación basada en la dirección IP
+        $ipAddress = request()->ip();
+        $location = strpos($ipAddress, '.0') !== false ? 'UIB Sede Barranquilla' : 'Externa';
 
         // Iterar sobre los datos del formulario para guardar cada respuesta
         foreach ($request->all() as $key => $value) {
@@ -69,6 +61,9 @@ class ChatController extends Controller
                     'question_id' => $questionId,
                     'patient_id' => $patient->id,
                     'confirmed' => $value,
+                    'device' => $deviceType,
+                    'ip' => $ipAddress,
+                    'location' => $location,
                     'created_at' => now('America/Bogota')
                 ]);
             }
@@ -139,13 +134,14 @@ class ChatController extends Controller
                         'updated_at' => $time
                 ]);
 
-                $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
+                $location = DB::table('question_patient')->where('patient_id', $patient->id)->first(['location']);
                 
                 $carbon = Carbon::parse();
                 // Enviar email con datos de la cita asignada al paciente
                 $mailData = [
                     'title' => $patient->full_name,
                     'risk' => $riskStatus->riesgo,
+                    'location' => $location->location,
                     //'body' => 'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A')
                 ];
                     
@@ -168,7 +164,7 @@ class ChatController extends Controller
 
         return $ifExistsAppointment > 0 ? 'TIENE CITA ASIGNADA' : 'NO TIENE CITA ASIGANDA'; */
 
-        return view('chat.index', compact('patient'));
+        return view('patient-home.chat.index', compact('patient'));
     }
 
     public function serviceChatPatient(Request $request)
@@ -294,7 +290,7 @@ class ChatController extends Controller
                     "- Esta es la información o datos personales del USUARIO {$patient}." .
                     "- Informa al USUARIO la cita agendada que se le asignó: " .
                     (isset($newAppointment) ? "El día " . $newAppointment->date . " a las " . $newAppointment->start_time : "No tiene cita agendada.") .
-                    " Si te pregunta, solo le dirás estos datos: 'FECHA' y 'HORA' de la cita solamente. La hora se le dará en formato de 12 horas.",
+                    " Si te pregunta, solo le dirás estos datos: 'FECHA' y 'HORA' de la cita solamente. La hora de la cita se le daras en formato de 12 horas.",
                 ];
                 // Agregar el contexto inicial al arreglo de mensajes
                 $messages = [$context];

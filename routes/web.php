@@ -24,63 +24,18 @@ use Jenssegers\Agent\Agent;
 |
 */
 
-Route::get('patient/login', [AuthPatientController::class, 'login'])->name('patient.login');
-Route::post('patient/authenticate', [AuthPatientController::class, 'authenticate'])->name('patient.authenticate');
-Route::get('patient/home', [AuthPatientController::class, 'home'])->name('patient.home');
-Route::get('patient/logout', [AuthPatientController::class, 'logout'])->name('patient.logout');
-Route::get('patient/register',  [RegisterController::class, 'index'])->name('patient.register')->middleware('guest');
-Route::post('patient/register/store',  [RegisterController::class, 'store'])->name('patient.register.store')->middleware('guest');
-Route::get('patient/questions/{patient}', [ChatController::class, 'questionPatient'])->name('questions');
-Route::post('/save-questions/{patient}', [ChatController::class, 'storeQuestionPatient'])->name('questions.store');
-Route::get('/chat/{patient}', [ChatController::class, 'chatPatient'])->name('chat');
-Route::post('/chat-services', [ChatController::class, 'serviceChatPatient']);
+Route::get('/patient/login', [AuthPatientController::class, 'login'])->name('patient.login');
+Route::post('/patient/authenticate', [AuthPatientController::class, 'authenticate'])->name('patient.authenticate');
+Route::get('/patient/home', [AuthPatientController::class, 'home'])->name('patient.home');
+Route::get('/patient/logout', [AuthPatientController::class, 'logout'])->name('patient.logout');
+Route::get('/patient/register',  [RegisterController::class, 'index'])->name('patient.register');
+Route::post('/patient/register/store',  [RegisterController::class, 'store'])->name('patient.register.store');
+Route::get('/patient/questions/{patient}', [ChatController::class, 'questionPatient'])->name('questions');
+Route::post('/patient/save-questions/{patient}', [ChatController::class, 'storeQuestionPatient'])->name('questions.store');
+Route::get('/patient/chat/{patient}', [ChatController::class, 'chatPatient'])->name('chat');
+Route::post('/patient/chat-services', [ChatController::class, 'serviceChatPatient']);
 
-Route::get(
-    '/form', function () {
-        //php artisan serve --host 192.168.20.31 --port=8000 casa
-        //php artisan serve --host 172.28.8.154 --port=8000 UIB
-
-         $agent = new Agent();
-
-/*         if ($agent->isMobile())
-        {
-            return 'Is Mobile '. $agent->platform() .' '. 
-                    'Browser: '. $agent->browser() . ' ' . 
-                     request()->ip();
-        }
-
-        if ($agent->isDesktop())
-        {
-            $mystring = request()->ip();
-            $findme   = '.24';
-            $pos = strpos($mystring, $findme);
-
-            // Note our use of ===.  Simply == would not work as expected
-            // because the position of 'a' was the 0th (first) character.
-            if ($pos === false) {
-                return "IP: {$mystring} | Ubicación: Externa";
-                echo "'$findme' was not found in the string '$mystring'";
-            } else {
-                return "IP: {$mystring} | Ubicación: UIB Sede Barranquilla | Is Desktop {$agent->platform()} | Browser: {$agent->browser()}";
-                echo "Ubicación: UIB Barranquilla The string. The string '$findme' was found in the string '$mystring'";
-                echo " and exists at position $pos";
-            }
-
-        } */
-
-        return view('chat.form');
-    }
-)->name('form');
-
-Route::post('/form/programs/find', [ChatController::class, 'findByQueryProgram'])
-->name(
-    'form.programs.findByQueryProgram'
-);
-
-Route::post('/save-patients-form', [ChatController::class, 'savePatientForm'])
-->name(
-    'form.savePatientForm'
-);
+//Route::post('/programs/find', [ChatController::class, 'findByQueryProgram'])->name('findByQueryProgram');
 
 Route::get(
     '/', function () {
@@ -125,7 +80,7 @@ Route::middleware(['auth', 'user-role:DOCTOR|SECRETARY|ADMIN'])->group(
             );
         Route::post('/programs/find', [PatientsController::class, 'findByQueryProgram'])
         ->name(
-            'programs.findByQueryProgram'
+            'programs.findByQuery'
         );
 
     }

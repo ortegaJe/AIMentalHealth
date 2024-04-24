@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
 use App\Mail\CredentialMail;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
@@ -47,6 +48,7 @@ class RegisterController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'dob' => $request->dob,
+            'role' => UserRoles::PATIENT->value,
             'token' => fake()->uuid(),
             'password' => hash::make($realPassword),
         ]);

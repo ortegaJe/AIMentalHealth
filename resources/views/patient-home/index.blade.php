@@ -4,5 +4,4 @@
 
 @section('content')
 
-@include('patient-home.inc._users_scripts')
 @endsection
