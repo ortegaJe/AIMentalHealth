@@ -265,8 +265,8 @@ class ChatController extends Controller
                                             'motivation' => $riskStatus->riesgo,
                                             'user_id' => 1,
                                             'patient_id' => $patient->id,
-                                            'created_at' => $date,
-                                            'updated_at' => $date
+                                            'created_at' => now('America/Bogota'),
+                                            'updated_at' => now('America/Bogota'),
                                         ]);
                                 
                                         // Enviar email con datos de la cita asignada al paciente
