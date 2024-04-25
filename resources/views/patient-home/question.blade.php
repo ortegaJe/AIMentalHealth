@@ -34,7 +34,6 @@
 </head>
 
 <body>
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -43,7 +42,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header bg-info">
-                                    <h4 class="modal-title">Responde estas preguntas</h4>
+                                    <h4 class="modal-title">Estamos aquí para escucharte: responde estas preguntas</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form class="needs-validation" method="POST"
@@ -77,7 +76,7 @@
     </section>
 
     <!-- ./wrapper-->
-    @include('inc._users_scripts')
+    @include('patient-home.inc._users_scripts')
 
     <script>
         $(document).ready(function() {

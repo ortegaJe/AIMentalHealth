@@ -31,14 +31,8 @@ class ChatController extends Controller
         return view('patient-home.question', compact('patient', 'questions'));
     }
 
-    public function storeQuestionPatient(QuestionFormRequest $request, Patient $patient)
+    public function storeQuestionPatient(Request $request, Patient $patient)
     { 
-        //$validator = Validator::make($request->all(), ['required'], ['Todas las preguntas deben ser respondidas para poder enviar el sondeo.']);
-        //return $validator->validate();
-
-        //$validated = $request->validated();
-        //return $validated;
-
         //php artisan serve --host 192.168.20.31 --port=8000 casa
         //php artisan serve --host 172.28.8.154 --port=8000 UIB
         $agent = new Agent();
@@ -46,9 +40,32 @@ class ChatController extends Controller
         $deviceType = ($agent->isDesktop()) ? 'Desktop' : (($agent->isMobile()) ? 'Mobile' : 'Otro');
         // Determinar la ubicación basada en la dirección IP
         $ipAddress = request()->ip();
-        $location = strpos($ipAddress, '.0') !== false ? 'UIB Sede Barranquilla' : 'Externa';
+        $location = strpos($ipAddress, '.0') !== false ? 'IUB Sede Barranquilla' : 'Externa';
 
-        // Iterar sobre los datos del formulario para guardar cada respuesta
+        $questions = DB::table('questions')->pluck('id');
+
+        // Definir las reglas de validación en un array
+        $rules = [];
+        $messages = [];
+
+        // Iterar sobre los IDs de las preguntas
+        foreach ($questions as $questionId) {
+            $rules['question_' . $questionId] = 'required';
+            $messages['question_' . $questionId . '.required'] = 'Todas las preguntas son obligatorias a responder.';
+        }
+
+        // Aplicar las reglas de validación
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        //dd($validator);
+
+        // Verificar si hay errores de validación
+        if ($validator->fails()) {
+            // Si hay errores, redirigir de vuelta al formulario
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Si no hay errores de validación, proceder a guardar las respuestas
         foreach ($request->all() as $key => $value) {
             // Verificar si la clave del campo es una pregunta
             if (strpos($key, 'question_') === 0) {
@@ -67,6 +84,7 @@ class ChatController extends Controller
                 ]);
             }
         }
+
         $token = fake()->uuid();
         return redirect()->route('chat', ['patient' => $patient, 'token' => $token]);
     }

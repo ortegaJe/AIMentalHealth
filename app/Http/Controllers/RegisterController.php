@@ -39,7 +39,10 @@ class RegisterController extends Controller
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:patients'],
             'phone' => ['required', 'string'],
-            'dob' => ['required', 'date'],
+            'dob' => ['required', 'before:01/01/2006','date'],
+        ],
+        [
+            'dob.before' => 'No eres mayor de 18 años',
         ]);
 
         $realPassword = fake()->regexify('[A-Z]{5}[0-4]{3}');

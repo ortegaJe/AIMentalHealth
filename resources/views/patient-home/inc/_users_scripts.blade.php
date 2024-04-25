@@ -181,8 +181,8 @@
 </script>
 
 <!-- only include _errors subview if there is errors-->
-@includeWhen($errors->any(), 'inc._errors')
+@includeWhen($errors->any(), 'patient-home.inc._errors')
 
 {{-- sucess msg --}}
 <!--TODO: check if I m working (sucess msg is displayed after successful add of a user)-->
-@includeWhen(session('success'), 'inc._success')
+@includeWhen(session('success'), 'patient-home.inc._success')
