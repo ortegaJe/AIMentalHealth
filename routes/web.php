@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OrientationLtrController;
+use App\Http\Controllers\Patient\Home\PatientHomeController;
 use App\Http\Controllers\Patient\Login\PatientController as AuthPatientController;
 use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\PrescriptionsController;
@@ -26,13 +27,13 @@ use Jenssegers\Agent\Agent;
 
 Route::get('/patient/login', [AuthPatientController::class, 'login'])->name('patient.login');
 Route::post('/patient/authenticate', [AuthPatientController::class, 'authenticate'])->name('patient.authenticate');
-Route::get('/patient/home', [AuthPatientController::class, 'home'])->name('patient.home');
 Route::get('/patient/logout', [AuthPatientController::class, 'logout'])->name('patient.logout');
 Route::get('/patient/register',  [RegisterController::class, 'index'])->name('patient.register');
 Route::post('/patient/register/store',  [RegisterController::class, 'store'])->name('patient.register.store');
-Route::get('/patient/questions/{patient}', [ChatController::class, 'questionPatient'])->name('questions');
+Route::get('/patient/home', [PatientHomeController::class, 'index'])->name('patient.home');
+Route::get('/patient/questions/{patient}-{token}', [ChatController::class, 'questionPatient'])->name('questions');
 Route::post('/patient/save-questions/{patient}', [ChatController::class, 'storeQuestionPatient'])->name('questions.store');
-Route::get('/patient/chat/{patient}', [ChatController::class, 'chatPatient'])->name('chat');
+Route::get('/patient/chat/{patient}-{token}', [ChatController::class, 'chatPatient'])->name('chat');
 Route::post('/patient/chat-services', [ChatController::class, 'serviceChatPatient']);
 
 //Route::post('/programs/find', [ChatController::class, 'findByQueryProgram'])->name('findByQueryProgram');

@@ -46,12 +46,6 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('appointment.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-notes-medical"></i>
-                        <p>Citas</p>
-                    </a>
-                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

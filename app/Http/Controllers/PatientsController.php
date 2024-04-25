@@ -107,7 +107,7 @@ class PatientsController extends Controller
     public function show(Patient $patient)
     {
         // Obtener la ruta del archivo JSON
-        $folderPath = 'public/chats/'.$patient->identification.'/';
+        $folderPath = 'public/chats/'.$patient->token.'/';
         $fileName = 'chat.json';
         $filePath = $folderPath . $fileName;
 

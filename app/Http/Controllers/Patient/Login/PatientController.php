@@ -36,19 +36,15 @@ class PatientController extends Controller
                 return redirect()->route('patient.home');
             } else {
                 //$patient_id = Auth::guard('patient')->user()->id;
-                $patient = Patient::where('id', $patient_id)->first('id');
-                return redirect()->route('questions', ['patient' => $patient]);
+                $patient = Patient::where('id', $patient_id)->first(['id', 'token']);
+                $token = fake()->uuid();
+                return redirect()->route('questions', ['patient' => $patient->id, 'token' => $token]);
             }
 
         } else {
             // La autenticación falló
             return back()->withErrors(['message' => 'Credenciales inválidas'])->withInput();
         }
-    }
-
-    public function home()
-    {
-        return view('patient-home.index');
     }
 
     public function logout(Request $request)

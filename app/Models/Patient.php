@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PatientRol;
+use App\Enums\PatientRole;
 use App\Enums\UserRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 //use Illuminate\Database\Eloquent\Model;
@@ -56,7 +58,7 @@ class Patient extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'role'=>UserRoles::class,
+        'role'=>PatientRole::class,
     ];
 
     public function scans()

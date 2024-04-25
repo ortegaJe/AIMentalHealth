@@ -25,10 +25,9 @@ use Jenssegers\Agent\Agent;
 
 class ChatController extends Controller
 {
-    public function questionPatient(Patient $patient)
+    public function questionPatient(Patient $patient, $token)
     {               
         $questions = DB::table('questions')->get(['id','name']);
-
         return view('patient-home.question', compact('patient', 'questions'));
     }
 
@@ -68,12 +67,11 @@ class ChatController extends Controller
                 ]);
             }
         }
-
-        return redirect()->route('chat', ['patient' => $patient]);
-        
+        $token = fake()->uuid();
+        return redirect()->route('chat', ['patient' => $patient, 'token' => $token]);
     }
 
-    public function chatPatient(Patient $patient, Request $request)
+    public function chatPatient(Request $request, Patient $patient, $token)
     {
         /* $questionPatient = DB::table('questions as a')
                         ->leftJoin('question_patient as b', 'b.question_id', 'a.id')
@@ -164,7 +162,10 @@ class ChatController extends Controller
 
         return $ifExistsAppointment > 0 ? 'TIENE CITA ASIGNADA' : 'NO TIENE CITA ASIGANDA'; */
 
-        return view('patient-home.chat.index', compact('patient'));
+        //$newAppointment = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
+        //return (isset($newAppointment) ? "El día " . $newAppointment->date . " a las " . $newAppointment->start_time : "No tiene cita agendada.");
+
+        return view('patient-home.chat.index', compact('patient', 'token'));
     }
 
     public function serviceChatPatient(Request $request)
@@ -270,11 +271,12 @@ class ChatController extends Controller
                                 
                                         // Enviar email con datos de la cita asignada al paciente
                                         $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
-                                
-                                        $carbon = Carbon::parse();
+                                        $date = Carbon::parse($appointmentTemp->date)->isoFormat('D-M-Y');
+                                        $startTime = Carbon::parse($appointmentTemp->start_time)->format('g:i:s A');
+                                        
                                         $mailData = [
                                             'title' => $patient->full_name,
-                                            'body' => 'el día ' . $carbon->toDateString($appointmentTemp->date) . ' y hora ' . $carbon->isoFormat($appointmentTemp->start_time, 'h:mm A')
+                                            'body' => 'Fecha de la cita: ' . $date . ' - Hora de la cita ' . $startTime ,
                                         ];
                                 
                                         Mail::to($patient->email)->send(new DemoMail($mailData));
@@ -308,7 +310,8 @@ class ChatController extends Controller
                     "model" => "gpt-3.5-turbo",
                     "messages" => $messages,
                     "temperature" => 0.6, //La temperatura es un parámetro que controla la aleatoriedad en las predicciones del modelo. Temperatura baja (0 a 0.3): Resultados más centrados, coherentes y conservadores. Temperatura media (0.3 a 0.7): Creatividad y coherencia equilibradas. Temperatura alta (0.7 a 1): El modelo tiende a generar respuestas más diversas y creativas, arriesgándose a ser menos coherente y preciso en ciertos contextos.
-                    "max_tokens" => 150 
+                    "frequency_penalty" => 1.0,
+                    "max_tokens" => 150,
                 ])->json();
 
                 error_log(__LINE__ . __METHOD__ . ' respuesta del asistente --->' . var_export($response, true));
@@ -318,7 +321,7 @@ class ChatController extends Controller
                 $messages[] = ["role" => "assistant", "content" => $response_content];
 
                 // Ruta y nombre del archivo json de los chats
-                $folderPath = 'public/chats/'.$patient->identification.'/';
+                $folderPath = 'public/chats/'.$patient->token.'/';
                 $fileName = 'chat.json';
                 $filePath = $folderPath . $fileName;
 

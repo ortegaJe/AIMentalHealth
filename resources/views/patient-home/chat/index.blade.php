@@ -3,8 +3,8 @@
 
 <head>
     {{-- <title>Chat GPT Laravel | Code with Ross</title> --}}
-    <title>AI Chat | Mental Health</title>
-    <link rel="icon" href="https://assets.edlin.app/favicon/favicon.ico" />
+    <title>AVi ChatBot Mental Health</title>
+    <link rel="icon" href="{{ asset('media/favicons/mhealth-192x192.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- JavaScript -->
@@ -80,10 +80,9 @@
 
         // Capturar fecha de la respuesta
         const d = new Date();
-        let date = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear() + ' ' + d
-            .toLocaleTimeString();
+        let date = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear() + ' ' + d.toLocaleTimeString();
 
-        fetch('/chat-services', {
+        fetch('/patient/chat-services', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -9,6 +9,8 @@
         @yield('title', 'AVi'.env('APP_NAME'))
     </title>
 
+    <link rel="icon" href="{{ asset('media/favicons/mhealth-192x192.png') }}" />
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
