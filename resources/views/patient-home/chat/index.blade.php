@@ -7,62 +7,73 @@
     <link rel="icon" href="{{ asset('media/favicons/mhealth-192x192.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!-- JavaScript -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <!-- End JavaScript -->
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/style.chat.css">
-    <!-- End CSS -->
-
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{{ asset('/css/mdb.min.css') }}" />
 </head>
 
-<body>
-    <div class="chat">
-
-        <!-- Header -->
-        <div class="top">
-            <img src="{{ asset('media/icons/chatbot.png') }}" width="128" height="128" alt="ai_chatbot">
-            <div>
-                <p>AVi ChatBot</p>
-                <small>Online</small>
-                <p><a href="{{ route('patient.home') }}">Home</a></p>
-            </div>
-        </div>
-        <!-- End Header -->
-
-        <!-- Chat -->
-        <div class="messages">
-            <div class="left message">
-                <img src="{{ asset('media/icons/chatbot.png') }}" alt="Avatar">
-                <p>¡Hola {{ $patient->full_name }}! ¿Cómo estás hoy? ¿En qué puedo ayudarte?</p>
-                <input type="number" id="patient_id" name="patient_id" value="{{ $patient->id }}" hidden>
-            </div>
-        </div>
-        <!-- End Chat -->
-
-        <!-- Footer -->
-        <div class="bottom">
-            <form>
-                <input type="text" id="message" name="message" placeholder="Enter message..." autocomplete="off">
-                <button>
-                    <div class="svg-wrapper-1">
-                        <div class="svg-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="none" d="M0 0h24v24H0z"></path>
-                                <path fill="currentColor"
-                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
-                                </path>
-                            </svg>
+<body style="background-color: #aaaaaa;">
+    <!-- Modal -->
+    <div class="modal fade show" id="exampleModal" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalTitle">AVi ChatBot</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="messages">
+                            <input type="number" id="patient_id" name="patient_id" value="{{ $patient->id }}" hidden>
+                            <div class="d-flex flex-row justify-content-start mb-4 left message">
+                                <img src="{{ asset('media/icons/avichatbot.png') }}" alt="avatar 1"
+                                    style="width: 45px; height: 100%;">
+                                <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgb(49, 255, 215);">
+                                    <p class="small mb-0" style="color: rgb(38, 109, 107);"><Strong>¡Hola!
+                                            {{ $patient->full_name }}</Strong>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <span>Send</span>
-                </button>
-            </form>
+                </div>
+                <form>
+                    <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+                        <img src="{{ asset('media/icons/chatuser.png') }}" alt="avatar 3"
+                            style="width: 40px; height: 100%;">
+                        <input type="text" class="form-control form-control-lg" id="message" name="message"
+                            autocomplete="off" placeholder="Type message">
+                        <a class="ms-2 text-muted" href="{{ route('patient.home') }}" data-mdb-ripple-init
+                            data-mdb-tooltip-init data-mdb-placement="top" title="Ir a mi portal">
+                            <i class="fas fa-home"></i>
+                        </a>
+                        <button class="ms-1 border-0 bg-transparent" style="color: royalblue;" data-mdb-ripple-init
+                            data-mdb-tooltip-init data-mdb-placement="top" title="Enviar">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <!-- End Footer -->
     </div>
 </body>
+
+<script type="text/javascript" src="{{ asset('/js/mdb.umd.min.js') }}"></script>
+
+<script>
+    const instance = new mdb.Modal(
+        document.getElementById('exampleModal'), {
+            backdrop: false,
+            keyboard: false,
+        }
+    );
+    instance.show()
+</script>
 
 <script>
     // Broadcast messages
@@ -80,7 +91,8 @@
 
         // Capturar fecha de la respuesta
         const d = new Date();
-        let date = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear() + ' ' + d.toLocaleTimeString();
+        let date = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear() + ' ' +
+            d.toLocaleTimeString();
 
         fetch('/patient/chat-services', {
                 method: 'POST',
@@ -98,15 +110,20 @@
             .then(data => {
                 console.log(data);
                 // Populate sending message
-                const sendingMessage = '<div class="right message">' +
-                    '<p>' + document.querySelector("form #message").value + '</p>' +
-                    '<img src="{{ asset('media/icons/chatuser.png') }}" alt="ai-chat">' +
+                const sendingMessage = '<div class="d-flex flex-row justify-content-end mb-4">' +
+                    '<div class="p-3 ms-3" style="border-radius: 15px; background-color: #fbfbfb;">' +
+                    '<p class="small mb-0">' + document.querySelector("form #message").value + '</p>' +
+                    '</div>' +
+                    '<img src="{{ asset('media/icons/chatuser.png') }}" alt="user" style="width: 45px; height: 100%;">' +
                     '</div>';
 
                 // Populate receiving message
-                const receivingMessage = '<div class="left message">' +
-                    '<img src="{{ asset('media/icons/chatbot.png') }}" alt="ai-chat">' +
-                    '<p>' + data + '</p>' +
+                const receivingMessage = '<div class="d-flex flex-row justify-content-start mb-4">' +
+                    '<img src="{{ asset('media/icons/avichatbot.png') }}" alt="avatar 1" style="width: 45px; height: 100%;">' +
+                    '<div class="p-3 ms-3" style="border-radius: 15px; background-color: rgb(49, 255, 215);">' +
+                    '<p class="small mb-0" style="color: rgb(38, 109, 107);"><strong>' + data +
+                    '</strong></p>' +
+                    '</div>' +
                     '</div>';
 
                 // Append messages

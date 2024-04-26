@@ -39,6 +39,12 @@ Route::post('/patient/chat-services', [ChatController::class, 'serviceChatPatien
 //Route::post('/programs/find', [ChatController::class, 'findByQueryProgram'])->name('findByQueryProgram');
 
 Route::get(
+    '/index', function () {
+        return view('index');
+    }
+);
+
+Route::get(
     '/', function () {
         return view('auth.login');
     }
