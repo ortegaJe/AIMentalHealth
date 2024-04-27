@@ -41,25 +41,32 @@
                                     <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-sort="ascending"
                                         aria-label="Rendering engine: activate to sort column descending">
-                                        Fecha Cita</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
-                                        colspan="1" aria-label="CSS grade: activate to sort column ascending">
-                                        Paciente</th>
+                                        Fecha Cita
+                                    </th>
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="Browser: activate to sort column ascending">
-                                        Hora Inicio</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
-                                        colspan="1" aria-label="Platform(s): activate to sort column ascending">
-                                        Hora Final</th>
-                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
-                                        colspan="1" aria-label="Engine version: activate to sort column ascending">
-                                        Motivo</th>
-{{--                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
-                                        colspan="1" aria-label="Engine version: activate to sort column ascending">
-                                        Estado</th> --}}
+                                        Hora Inicio
+                                    </th>
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="CSS grade: activate to sort column ascending">
-                                        actions</th>
+                                        Identificación
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
+                                        colspan="1" aria-label="CSS grade: activate to sort column ascending">
+                                        Paciente
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
+                                        colspan="1" aria-label="Engine version: activate to sort column ascending">
+                                        Estado
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
+                                        colspan="1" aria-label="Engine version: activate to sort column ascending">
+                                        Motivo
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
+                                        colspan="1" aria-label="CSS grade: activate to sort column ascending">
+                                        Acciones
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,22 +77,40 @@
                                 @foreach ($appointments as $appointment)
                                     <tr role="row" class="{{ $counter % 2 == 0 ? 'even' : 'odd' }}">
                                         <td class="dtr-control sorting_1" tabindex="0">
-                                            {{ $appointment['date'] }}</td>
+                                            {{ \Carbon\Carbon::parse($appointment['date'])->format('d/m/Y') }}
+                                        </td>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($appointment['start_time'])->format('g:i A') }}
+                                        </td>
+                                        <td>{{ $appointment['identification'] }}</td>
                                         <td>{{ $appointment['full_name'] }}</td>
-                                        <td>{{ $appointment['start_time'] }}</td>
-                                        <td>{{ $appointment['end_time'] }}</td>
+                                        <td>
+                                            @if ($appointment['risk'] === 'riesgo bajo')
+                                            <span class="badge badge-primary">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                            @endif
+                                            @if ($appointment['risk'] === 'riesgo moderado')
+                                            <span class="badge badge-warning">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                            @endif
+                                            @if ($appointment['risk'] === 'riesgo alto')
+                                            <span class="badge badge-danger">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                            @endif
+                                            @if ($appointment['risk'] === 'precisa ingreso')
+                                            <span class="badge badge-danger">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                            @endif
+                                        </td>
                                         <td class="truncate">{{ $appointment['motivation'] }}</td>
-{{--                                         <td>
+                                        {{-- <td>
                                             {{ $appointment['status'] == 0 ? 'PENDIENTE' : 'ACTIVO' }}
                                         </td> --}}
                                         <td>
-                                            <button type="button"
-                                                onclick="window.location='{{ route('patients.show', [$appointment->patient_id]) }}'"
-                                                class="btn btn-danger btn-block">
-                                                <i class="fas fa-notes-medical"></i>
-                                            </button>
+                                            @if (\App\Enums\UserRoles::isDoctor(Auth::user()->role) || \App\Enums\UserRoles::isAdmin(Auth::user()->role))
+                                                <button type="button" class="btn btn-block btn-danger"
+                                                    onclick="window.location='{{ route('patients.show', [$appointment->patient_id]) }}'">
+                                                    <i class="fas fa-notes-medical"></i>
+                                                    Evaluación Psicológica
+                                                </button>
+                                            @endif
                                         </td>
-
                                         {{-- <td
                                             style="padding-right: -3.25rem;border-right-width: 0px;height: 37px;width: 95.833px;">
                                             TBD later

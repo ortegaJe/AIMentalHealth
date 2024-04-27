@@ -37,8 +37,7 @@ class PatientsController extends Controller
                 'full_name',
                 'LIKE', '%' . request('queryTerm') . '%'
             )
-            ->get(
-            );
+            ->get();
         return response()->json($result);
     }
 
@@ -49,10 +48,23 @@ class PatientsController extends Controller
                 'name',
                 'LIKE', '%' . request('queryTerm') . '%'
             )
-            ->get(
-            );
+            ->get();
         return response()->json($result);
     }
+
+    public function findByQueryPatientAddAppo(Request $request, Patient $patient)
+    {
+        $result = DB::table('patients')->select('id', DB::raw("full_name as text"))
+            ->where(
+                'full_name',
+                'LIKE', '%' . request('queryTerm') . '%'
+            )
+            ->where('patients.id', $patient)
+            ->get();
+
+        return response()->json($result);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -139,7 +151,7 @@ class PatientsController extends Controller
             }
         } else {
             //echo "El archivo JSON no existe.";
-            $messagesHtml = "El archivo JSON no existe.";
+            //$messagesHtml = "El archivo JSON no existe.";
         }
 
         // current doctor ID
@@ -150,6 +162,9 @@ class PatientsController extends Controller
 
         // A list of doctor-patient orientationLtrs
         $orientationLtrs = $patient->orientationLtrs()->where('user_id', $doctor_id)->get();
+
+        // A list of doctor-patient remisions
+        $remisions = $patient->remisions()->where('user_id', $doctor_id)->get();
         
         // A list of doctor-patient prescriptions
         $prescriptions = $patient->prescriptions()->where('user_id', $doctor_id)->get();
@@ -169,6 +184,7 @@ class PatientsController extends Controller
                 'prescriptions'=>$prescriptions,
                 'scans'=>$scans,
                 'orientationLtrs'=>$orientationLtrs,
+                'remisions' => $remisions,
                 'programs' => $programs,
                 'messagesHtml' => $messagesHtml
             ]

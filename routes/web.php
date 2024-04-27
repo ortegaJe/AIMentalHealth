@@ -9,6 +9,7 @@ use App\Http\Controllers\Patient\Login\PatientController as AuthPatientControlle
 use App\Http\Controllers\PatientsController;
 use App\Http\Controllers\PrescriptionsController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\RemisionController;
 use App\Http\Controllers\ScansController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -36,13 +37,9 @@ Route::post('/patient/save-questions/{patient}', [ChatController::class, 'storeQ
 Route::get('/patient/chat/{patient}-{token}', [ChatController::class, 'chatPatient'])->name('chat');
 Route::post('/patient/chat-services', [ChatController::class, 'serviceChatPatient']);
 
-//Route::post('/programs/find', [ChatController::class, 'findByQueryProgram'])->name('findByQueryProgram');
+Route::resource('remisions', RemisionController::class);
 
-Route::get(
-    '/index', function () {
-        return view('index');
-    }
-);
+//Route::post('/programs/find', [ChatController::class, 'findByQueryProgram'])->name('findByQueryProgram');
 
 Route::get(
     '/', function () {
@@ -88,6 +85,10 @@ Route::middleware(['auth', 'user-role:DOCTOR|SECRETARY|ADMIN'])->group(
         Route::post('/programs/find', [PatientsController::class, 'findByQueryProgram'])
         ->name(
             'programs.findByQuery'
+        );
+        Route::post('/add/appointment/patient', [AppointmentController::class, 'addAppoPatient'])
+        ->name(
+            'patient.add.appoinment'
         );
 
     }

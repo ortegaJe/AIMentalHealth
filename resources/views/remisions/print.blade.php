@@ -101,11 +101,10 @@
             <div class="row">
                 <div class="col-12">
                     <h2 class="page-header">
-                        <img src="{{ asset('media/favicons/mhealth-192x192.png') }}" alt="AVi Mental Health Portal logo"
+                        <img src="{{ asset('media/favicons/mhealth-192x192.png') }}" alt="AVi Mental Health logo"
                             width="96px">
-                        AVi Mental Health Portal - Evaluación Psicológica
-                        <small
-                            class="float-right">Fecha:{{ date('Y-m-d', strtotime($orientataionsltr['updated_at'])) }}</small>
+                        AVi Mental Health Portal - Remisión
+                        <small class="float-right">Fecha:{{ date('Y-m-d', strtotime($remision['updated_at'])) }}</small>
                     </h2>
                 </div>
                 <!-- /.col -->
@@ -121,7 +120,7 @@
                             <th id="nomLabel">Nombre Paciente:</th>
                             <td id="nom">{{ $patient->full_name }}</td>
                             <th id="prenomLabel"></th>
-                            <td id="nom"></td>
+                            <td></td>
                         </tr>
 
                         <tr>
@@ -135,7 +134,7 @@
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <textarea id="prescritionBody" cols="29" rows="13">{{ $orientataionsltr->content }}</textarea>
+                                <textarea id="prescritionBody" cols="29" rows="13">{{ $remision->content }}</textarea>
                             </td>
                         </tr>
                     </tbody>

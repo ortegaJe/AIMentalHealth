@@ -40,7 +40,7 @@ class ChatController extends Controller
         $deviceType = ($agent->isDesktop()) ? 'Desktop' : (($agent->isMobile()) ? 'Mobile' : 'Otro');
         // Determinar la ubicación basada en la dirección IP
         $ipAddress = request()->ip();
-        $location = strpos($ipAddress, '.0') !== false ? 'IUB Sede Barranquilla' : 'Externa';
+        $location = strpos($ipAddress, '.0') !== false ? 'IUB Sede Barranquilla Plaza de la Paz' : 'Externa';
 
         $questions = DB::table('questions')->pluck('id');
 

@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\PatientRol;
 use App\Enums\PatientRole;
 use App\Enums\UserRoles;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 //use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Patient as Authenticatable;
@@ -25,7 +27,7 @@ class Patient extends Authenticatable
     protected $fillable = [
         'full_name',
         'identification',
-        'age',
+        //'age',
         'address',
         'neighborhood',
         'city',
@@ -61,6 +63,13 @@ class Patient extends Authenticatable
         'role'=>PatientRole::class,
     ];
 
+    public function age(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Carbon::parse($this->dob)->age,
+        );
+    }
+
     public function scans()
     {
         return $this->hasMany(Scan::class);
@@ -69,6 +78,11 @@ class Patient extends Authenticatable
     public function orientationLtrs()
     {
         return $this->hasMany(OrientationLetter::class);
+    }
+
+    public function remisions()
+    {
+        return $this->hasMany(Remision::class);
     }
 
     public function appointments()

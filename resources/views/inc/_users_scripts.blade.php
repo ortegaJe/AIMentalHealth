@@ -54,7 +54,12 @@
     });
     $("#appointment_table").ready(function() {
         $("#appointment_table").DataTable({
-            responsive: true
+            responsive: true,
+        })
+    });
+    $("#remisiones_table").ready(function() {
+        $("#remisiones_table").DataTable({
+            responsive: true,
         })
     });
 

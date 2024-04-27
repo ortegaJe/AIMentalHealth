@@ -49,8 +49,8 @@
 
                             <div class="form-group">
                                 <label for="age">Edad</label>
-                                <input id="age" name="age" type="text" data-inputmask="'mask': ['99']"
-                                    data-mask class="form-control" value="{{ old('age', $patient->age) }}" />
+                                <input id="age" name="age" type="text" class="form-control"
+                                    value="{{ old('age', $patient->age) }}" disabled/>
                             </div>
                             <div class="form-group">
                                 <label>Genero</label>
@@ -61,13 +61,12 @@
                                 </select>
                             </div>
                             @php
-                                Carbon\Carbon::parse($patient->dob)->format('m/d/Y');
+                                Carbon\Carbon::parse($patient->dob)->format('Y/m/d');
                             @endphp
                             <div class="form-group">
                                 <label for="dob">Fecha de Nacimiento</label>
                                 <input type="date" name="dob" id="dob" class="form-control"
-                                    value="{{ old('dob', Carbon\Carbon::parse($patient->dob)->format('m/d/Y')) }}"
-                                    required />
+                                    value="{{ old('dob', $patient->dob) }}" required />
                             </div>
 
                             <div class="form-group">
@@ -200,7 +199,8 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <button class="button add-btn" data-toggle="modal" data-target="#modal_add_appointment">
+                                <button class="button add-btn" data-toggle="modal"
+                                    data-target="#modal_add_appointment_patient">
                                     <svg viewBox="0 -0.5 9 9" version="1.1" xmlns="http://www.w3.org/2000/svg"
                                         xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" width="18"
                                         height="18">
@@ -230,10 +230,10 @@
             </div>
             <!-- /. Appointment  box -->
 
-            <!-- Valoracíon Psicologica box -->
+            <!-- Evaluación Psicológica box -->
             <div class="card card-secondary">
                 <div class="card-header">
-                    <h3 class="card-title">Valoracíon Psicologica</h3>
+                    <h3 class="card-title">Evaluación Psicológica</h3>
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -399,7 +399,7 @@
             <!--  Medical scans  box -->
             <div class="card card-secondary ">
                 <div class="card-header">
-                    <h3 class="card-title">Scans</h3>
+                    <h3 class="card-title">Documentos Adjuntos</h3>
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -420,7 +420,7 @@
                                                 rowspan="1" colspan="1" aria-sort="ascending"
                                                 aria-label="Rendering engine: activate to sort column descending">
                                                 Fecha</th>
-                                            <th rowspan="1" colspan="1">Nombre Anexo</th>
+                                            <th rowspan="1" colspan="1">Nombre</th>
                                             <th rowspan="1" colspan="1">Acciones</th>
                                         </tr>
                                     </thead>
@@ -447,7 +447,7 @@
                                                         {{-- <img src="{{ url($path) }}" alt="Image" /> --}}
                                                     </a>
                                                     <a href="{{ route('scans.download', $scan->id) }}"
-                                                        class="btn btn-warning">
+                                                        class="btn btn-warning" title="Descargar">
                                                         <i class="fas fa-download"></i>
                                                     </a>
                                                 </td>
@@ -490,12 +490,104 @@
                 </div>
             </div>
             <!-- /.Medical scans  box -->
+
+            <!-- Remisiones box -->
+            <div class="card card-warning">
+                <div class="card-header">
+                    <h3 class="card-title">Remisiones</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+
+                    </div>
+                </div>
+                <div id="infoMedical" class="card-body" style="display: block;">
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="remisiones_table"
+                                    class="table table-bordered table-striped dataTable dtr-inline" role="grid"
+                                    aria-describedby="example1_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="sorting_asc" tabindex="0" aria-controls="example1"
+                                                rowspan="1" colspan="1" aria-sort="ascending"
+                                                aria-label="Rendering engine: activate to sort column descending">
+                                                Fecha
+                                            </th>
+                                            <th rowspan="1" colspan="1">
+                                                Descripción
+                                            </th>
+                                            <th rowspan="1" colspan="1">
+                                                Acciones
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $counter = 1;
+                                        @endphp
+
+                                        @foreach ($remisions as $remision)
+                                            <tr role="row" class="{{ $counter % 2 == 0 ? 'even' : 'odd' }}">
+                                                <td class="dtr-control sorting_1" tabindex="0">
+                                                    {{ $remision['updated_at'] }}</td>
+                                                <td class="truncate">{{ $remision['content'] }}</td>
+                                                <td>
+                                                    <a href="{{ route('remisions.show', [$remision->id]) }}"
+                                                        target="_blank" class="btn btn-success"><i
+                                                            class="fa fa-print"></i>
+                                                        Print
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            @php
+                                                $counter++;
+                                            @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <button class="button add-btn" data-toggle="modal" data-target="#modal-add-remision">
+                                    <svg viewBox="0 -0.5 9 9" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" width="18"
+                                        height="18">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <title>plus_mini [#ffffff]</title>
+                                            <desc>Created with Sketch.</desc>
+                                            <defs> </defs>
+                                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
+                                                fill-rule="evenodd">
+                                                <g id="Dribbble-Light-Preview"
+                                                    transform="translate(-345.000000, -206.000000)" fill="#ffffff">
+                                                    <g id="icons" transform="translate(56.000000, 160.000000)">
+                                                        <polygon id="plus_mini-[#ffffff]"
+                                                            points="298 49 298 51 294.625 51 294.625 54 292.375 54 292.375 51 289 51 289 49 292.375 49 292.375 46 294.625 46 294.625 49">
+                                                        </polygon>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /. Remisiones box -->
         </div>
 
     </div>
 
     @include('modals._add_scan', ['patient' => $patient])
     @include('modals._add_orientationLtr', ['patient' => $patient])
+    @include('modals._add_remision', ['patient' => $patient])
     @include('modals._add_appointment')
+    @include('modals._add_appointment_patient', ['patient' => $patient])
     @include('modals._add_prescription', ['patient' => $patient])
 @endsection

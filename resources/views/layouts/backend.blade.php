@@ -54,7 +54,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 id="Header">@yield('header')</h1>
+                            <h1 id="Header text-muted">@yield('header')</h1>
                         </div>
                     </div>
                 </div>

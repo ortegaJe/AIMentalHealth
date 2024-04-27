@@ -35,8 +35,8 @@
                 <div class="form-group">
                     <label for="age">Edad</label>
                     <input id="age" name="age" type="number"
-                        class="@error('age') error-border @enderror form-control " value="{{ old('age', $patient->age) }}"
-                        placeholder=" " required />
+                        class="@error('age') error-border @enderror form-control " value="{{ $patient->age }}"
+                        placeholder=" " disabled />
                     @error('age')
                         <div class="error">{{ $message }}</div>
                     @enderror

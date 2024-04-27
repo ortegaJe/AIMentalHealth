@@ -1,6 +1,6 @@
 @extends('patient-home.layouts.backend')
 @section('title', 'Patient Home')
-@section('header', 'Home')
+@section('header', 'Mis Citas')
 
 @section('content')
     <!-- Appointments -->
@@ -19,14 +19,14 @@
                                         Fecha Cita</th>
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="CSS grade: activate to sort column ascending">
-                                        Asignado
+                                        Nombre del Profesional
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="Browser: activate to sort column ascending">
                                         Hora Inicio</th>
                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="Platform(s): activate to sort column ascending">
-                                        Hora Final</th>
+                                        Sede Atención</th>
                                     {{--                                     <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1"
                                         colspan="1" aria-label="Engine version: activate to sort column ascending">
                                         Motivo</th> --}}
@@ -47,11 +47,11 @@
                                 @foreach ($appointments as $appointment)
                                     <tr role="row" class="{{ $counter % 2 == 0 ? 'even' : 'odd' }}">
                                         <td class="dtr-control sorting_1" tabindex="0">
-                                            {{ $appointment['date'] }}</td>
+                                            {{ \Carbon\Carbon::parse($appointment['date'])->format('d/m/Y') }}
+                                        </td>
                                         <td>{{ $appointment['name'] }}</td>
-                                        <td>{{ $appointment['start_time'] }}</td>
-                                        <td>{{ $appointment['end_time'] }}</td>
-                                        {{-- <td class="truncate">{{ $appointment['motivation'] }}</td> --}}
+                                        <td>{{ \Carbon\Carbon::parse($appointment['start_time'])->format('g:i A') }}</td>
+                                        <td>{{ $appointment['location'] }}</td>
                                         {{--                                         <td>
                                         {{ $appointment['status'] == 0 ? 'PENDIENTE' : 'ACTIVO' }}
                                     </td> --}}
@@ -63,7 +63,8 @@
                                                 Comentarios
                                             </button>
                                             <button type="button"
-                                                onclick="window.location='{{ route('patients.show', [$appointment->patient_id]) }}'"
+                                                data-toggle="modal" 
+                                                data-target="#modal-show-remisions"
                                                 class="btn btn-warning">
                                                 <i class="fas fa-chevron-right"></i>
                                                 Remisiones
@@ -101,4 +102,5 @@
     </div>
     <!-- /.card -->
     <!-- END Appointments -->
+@include('modals._show_remisions', ['remisions' => $remisions])
 @endsection

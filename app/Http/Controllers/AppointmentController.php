@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use ModelHelpers;
 
 
@@ -30,15 +31,36 @@ class AppointmentController extends Controller
         // find all  appointment to secretary
         if (UserRoles::isSecretary(Auth::user()->role) || UserRoles::isAdmin(Auth::user()->role)) 
         {
-            $appointments = Appointment::join('patients as p', 'p.id', 'appointments.patient_id')->get();
+            $appointments = Appointment::join('patients', 'patients.id', 'appointments.patient_id')
+                                            ->select('patients.id as patient_id',
+                                                         'patients.identification',
+                                                         'patients.full_name',
+                                                         'appointments.motivation',
+                                                         'appointments.date',
+                                                         'appointments.start_time',
+                                                        DB::raw("LOWER(CASE WHEN appointments.motivation 
+                                                                    IN('RIESGO BAJO', 'RIESGO MODERADO', 'RIESGO ALTO', 'PRECISA INGRESO') 
+                                                                        THEN appointments.motivation ELSE '' END) as risk"))
+                                                        ->orderbyDesc('appointments.date')->get();
         }
         // find all  appointment assigned to a doctor
-        else if (UserRoles::isDoctor(Auth::user()->role)) 
+        else if (UserRoles::isDoctor(Auth::user()->role))
         {
             $doctor = User::find(Auth::user()->id);
             $appointments = Appointment::join('users', 'users.id', 'appointments.user_id')
                                             ->join('patients', 'patients.id', 'appointments.patient_id')
-                                                ->where('appointments.user_id', $doctor->id)->get();
+                                                ->where('appointments.user_id', $doctor->id)
+                                                    ->select('patients.id as patient_id',
+                                                            'patients.identification',
+                                                            'patients.full_name',
+                                                            'appointments.motivation',
+                                                            'appointments.date',
+                                                            'appointments.start_time',
+                                                            DB::raw("LOWER(CASE WHEN appointments.motivation 
+                                                                        IN('RIESGO BAJO', 'RIESGO MODERADO', 'RIESGO ALTO', 'PRECISA INGRESO') 
+                                                                            THEN appointments.motivation ELSE '' END) as risk"))
+                                                        ->orderbyDesc('appointments.date')->get();
+                                                        //return $appointments;
         }
 
         return view('appointments.index', ['appointments' => $appointments]);
@@ -83,6 +105,29 @@ class AppointmentController extends Controller
             
     }
 
+    public function addAppoPatient(AppointmentFormRequest $request)
+    {
+        $patient = Patient::find($request->patient_id);
+
+        $validated = $request->validated();
+
+        $patient->appointments()->create(
+            array_merge(
+                $validated,
+                ['user_id' => $request->doctor_id],
+            )
+        );
+
+        // If a patient will have an appointment with a doctor 
+        // we attachPatient to the current doctor
+        ModelHelpers::attachPatient($request->doctor_id, $patient->id);
+
+
+        return back()
+            ->with('success', 'a new appointment is created');
+            
+    }
+
     /**
      * Display the specified resource.
      *
@@ -99,6 +144,9 @@ class AppointmentController extends Controller
         
                 // A list of doctor-patient orientationLtrs
                 $orientationLtrs = $patient->orientationLtrs()->where('user_id', $doctor_id)->get();
+
+                // A list of doctor-patient remisions
+                $remisions = $patient->remisions()->where('user_id', $doctor_id)->get();
                 
                 // A list of doctor-patient prescriptions
                 $prescriptions = $patient->prescriptions()->where('user_id', $doctor_id)->get();
@@ -116,6 +164,7 @@ class AppointmentController extends Controller
                         'prescriptions'=>$prescriptions,
                         'scans'=>$scans,
                         'orientationLtrs'=>$orientationLtrs,
+                        'remisions' => $remisions,
                         'programs' => $programs,
                     ]
                 );

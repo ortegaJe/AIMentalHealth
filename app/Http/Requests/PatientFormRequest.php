@@ -26,7 +26,7 @@ class PatientFormRequest extends FormRequest
         return [
             'full_name' => 'required',
             'identification' =>  'required',
-            'age' => 'required',
+            //'age' => 'required',
             'address'  => 'required',
             'neighborhood' => 'required',
             'city' => 'required',
