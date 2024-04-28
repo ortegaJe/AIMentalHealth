@@ -436,7 +436,7 @@
                                                 <td
                                                     style="padding-right: -3.25rem;border-right-width: 0px;height: 37px;width: 95.833px;">
 
-                                                    @php
+{{--                                                     @php
                                                         $arr = explode('/', $scan->scan_path);
                                                         $name = end($arr);
                                                         $path = '/images/' . $name;
@@ -444,8 +444,7 @@
                                                     <a href={{ $path }}
                                                         onclick="window.open(this.href, '_blank', 'left=50%,top=50%,width=500,height=500,toolbar=1,resizable=1'); return false;"
                                                         class="btn btn-primary"><i class="fas fa-external-link-alt"></i>
-                                                        {{-- <img src="{{ url($path) }}" alt="Image" /> --}}
-                                                    </a>
+                                                    </a> --}}
                                                     <a href="{{ route('scans.download', $scan->id) }}"
                                                         class="btn btn-warning" title="Descargar">
                                                         <i class="fas fa-download"></i>

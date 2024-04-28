@@ -35,7 +35,8 @@ Route::get('/patient/home', [PatientHomeController::class, 'index'])->name('pati
 Route::get('/patient/questions/{patient}-{token}', [ChatController::class, 'questionPatient'])->name('questions');
 Route::post('/patient/save-questions/{patient}', [ChatController::class, 'storeQuestionPatient'])->name('questions.store');
 Route::get('/patient/chat/{patient}-{token}', [ChatController::class, 'chatPatient'])->name('chat');
-Route::post('/patient/chat-services', [ChatController::class, 'serviceChatPatient']);
+Route::post('/patient/chatServices', [ChatController::class, 'serviceChatPatient']);
+Route::post('/patient/home/chatServices', [PatientHomeController::class, 'serviceChatPatient']);
 
 Route::resource('remisions', RemisionController::class);
 

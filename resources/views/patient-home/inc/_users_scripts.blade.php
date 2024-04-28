@@ -180,6 +180,78 @@
     })();
 </script>
 
+<script>
+    // Broadcast messages
+    document.querySelector("form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        console.log('id del paciente',document.querySelector("#patient_id").value);
+
+        // Stop empty messages
+        if (document.querySelector("form #message").value.trim() === '') {
+            return;
+        }
+
+        // Disable form
+        document.querySelector("form #message").disabled = true;
+        document.querySelector("form button").disabled = true;
+
+        // Capturar fecha de la respuesta
+        const d = new Date();
+        let date = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear() + ' ' +
+            d.toLocaleTimeString();
+
+        fetch('/patient/home/chatServices', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    content: document.querySelector("form #message").value,
+                    patient: document.querySelector("#patient_id").value,
+                    date: date,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Populate sending message
+                const sendingMessage = '<div class="d-flex flex-row justify-content-end mb-4">' +
+                    '<div class="p-3 ms-3" style="border-radius: 15px; background-color: #fbfbfb;">' +
+                    '<p class="small mb-0">' + document.querySelector("form #message").value + '</p>' +
+                    '</div>' +
+                    '<img src="{{ asset('media/icons/chatuser.svg') }}" alt="user" style="width: 45px; height: 100%;">' +
+                    '</div>';
+
+                // Populate receiving message
+                const receivingMessage = '<div class="d-flex flex-row justify-content-start mb-4">' +
+                    '<img src="{{ asset('media/icons/avichatbot.png') }}" alt="avatar 1" style="width: 45px; height: 100%;">' +
+                    '<div class="p-3 ms-3" style="border-radius: 15px; background-color: rgb(200, 255, 244);">' +
+                    '<p class="small mb-0" style="color: rgb(38, 109, 107);"><strong>' + data +
+                    '</strong></p>' +
+                    '</div>' +
+                    '</div>';
+
+                // Append messages
+                document.querySelector(".messages").insertAdjacentHTML('beforeend', sendingMessage);
+                document.querySelector(".messages").insertAdjacentHTML('beforeend', receivingMessage);
+
+                // Cleanup
+                document.querySelector("form #message").value = '';
+                window.scrollTo(0, document.body.scrollHeight);
+
+                // Enable form
+                document.querySelector("form #message").disabled = false;
+                document.querySelector("form button").disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle error
+            });
+    });
+</script>
+
 <!-- only include _errors subview if there is errors-->
 @includeWhen($errors->any(), 'patient-home.inc._errors')
 

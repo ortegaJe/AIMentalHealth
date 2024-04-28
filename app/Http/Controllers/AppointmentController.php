@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRoles;
 use App\Http\Requests\AppointmentFormRequest;
+use App\Mail\DemoMail;
 use App\Models\Patient;
 use App\Models\User;
 use App\Models\Appointment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use ModelHelpers;
 
 
@@ -98,6 +101,18 @@ class AppointmentController extends Controller
         // If a patient will have an appointment with a doctor 
         // we attachPatient to the current doctor
         ModelHelpers::attachPatient($request->doctor_id, $patient->id);
+
+        // Enviar email con datos de la cita asignada al paciente
+        $appointmentTemp = DB::table('appointments')->where('patient_id', $patient->id)->first(['date','start_time']);
+        $date = Carbon::parse($appointmentTemp->date)->isoFormat('D-M-Y');
+        $startTime = Carbon::parse($appointmentTemp->start_time)->format('g:i:s A');
+        
+        $mailData = [
+            'title' => $patient->full_name,
+            'body' => 'Fecha de la cita: ' . $date . ' - Hora de la cita ' . $startTime ,
+        ];
+
+        Mail::to($patient->email)->send(new DemoMail($mailData));
 
 
         return back()

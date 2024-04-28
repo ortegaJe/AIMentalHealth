@@ -40,7 +40,7 @@ class ChatController extends Controller
         $deviceType = ($agent->isDesktop()) ? 'Desktop' : (($agent->isMobile()) ? 'Mobile' : 'Otro');
         // Determinar la ubicación basada en la dirección IP
         $ipAddress = request()->ip();
-        $location = strpos($ipAddress, '.0') !== false ? 'IUB Sede Barranquilla Plaza de la Paz' : 'Externa';
+        $location = strpos($ipAddress, '.0') !== false ? 'IUB Sede Barranquilla Plaza de la Paz - Área de Bienestar' : 'Externa';
 
         $questions = DB::table('questions')->pluck('id');
 
@@ -306,11 +306,12 @@ class ChatController extends Controller
                 // Condicionar asistente para darle contexto
                 $context = [
                     "role" => "system",
-                    "content" => PromptAI::CONTEXT_SYSTEM .
+                    "content" => PromptAI::CONTEXT_SYSTEM_APPOINTMENT .
                     "- Esta es la información o datos personales del USUARIO {$patient}." .
                     "- Informa al USUARIO la cita agendada que se le asignó: " .
                     (isset($newAppointment) ? "El día " . $newAppointment->date . " a las " . $newAppointment->start_time : "No tiene cita agendada.") .
-                    " Si te pregunta, solo le dirás estos datos: 'FECHA' y 'HORA' de la cita solamente. La hora de la cita se le daras en formato de 12 horas.",
+                    " Si te pregunta, solo le dirás estos datos: 'FECHA' y 'HORA' de la cita solamente. La hora de la cita se le daras en formato de 12 horas." . 
+                    "Cuando el USUARIO finalize la conversación dile que sera redirigido al portal web",
                 ];
                 // Agregar el contexto inicial al arreglo de mensajes
                 $messages = [$context];
@@ -328,7 +329,7 @@ class ChatController extends Controller
                     "model" => "gpt-3.5-turbo",
                     "messages" => $messages,
                     "temperature" => 0.6, //La temperatura es un parámetro que controla la aleatoriedad en las predicciones del modelo. Temperatura baja (0 a 0.3): Resultados más centrados, coherentes y conservadores. Temperatura media (0.3 a 0.7): Creatividad y coherencia equilibradas. Temperatura alta (0.7 a 1): El modelo tiende a generar respuestas más diversas y creativas, arriesgándose a ser menos coherente y preciso en ciertos contextos.
-                    "frequency_penalty" => 1.0,
+                    //"frequency_penalty" => 1.5,
                     "max_tokens" => 150,
                 ])->json();
 
