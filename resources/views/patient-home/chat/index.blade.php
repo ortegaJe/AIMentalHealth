@@ -33,7 +33,8 @@
                             <div class="d-flex flex-row justify-content-start mb-4 left message">
                                 <img src="{{ asset('media/icons/avichatbot.png') }}" alt="avatar 1"
                                     style="width: 45px; height: 100%;">
-                                <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgb(49, 255, 215);">
+                                <div class="p-3 ms-3"
+                                    style="border-radius: 15px; background-color: rgb(200, 255, 244);">
                                     <p class="small mb-0" style="color: rgb(38, 109, 107);"><Strong>¡Hola!
                                             {{ $patient->full_name }}</Strong>
                                     </p>
@@ -44,7 +45,7 @@
                 </div>
                 <form>
                     <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
-                        <img src="{{ asset('media/icons/chatuser.png') }}" alt="avatar 3"
+                        <img src="{{ asset('media/icons/chatuser.svg') }}" alt="avatar 3"
                             style="width: 40px; height: 100%;">
                         <input type="text" class="form-control form-control-lg" id="message" name="message"
                             autocomplete="off" placeholder="Type message">
@@ -89,12 +90,31 @@
         document.querySelector("form #message").disabled = true;
         document.querySelector("form button").disabled = true;
 
+        // Obtener el valor del mensaje del formulario
+        const message = document.querySelector("form #message").value;
+
+        // Array de palabras de finalización de chat
+        const palabrasFinChat = ["adiós", "chao", "hasta luego", "terminar", "fin"];
+
+        // Verificar si el mensaje contiene alguna palabra de finalización
+        const esFinalChat = palabrasFinChat.some(palabra => message.toLowerCase().includes(palabra));
+
+        // Mostrar el resultado
+        if (esFinalChat) {
+            console.log("El mensaje indica que el chat ha finalizado.");
+            setTimeout(function() {
+                window.location.href = "/patient/home";
+            }, 6000); // 3000 milisegundos = 3 segundos
+        } else {
+            console.log("El chat continúa...");
+        }
+
         // Capturar fecha de la respuesta
         const d = new Date();
         let date = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear() + ' ' +
             d.toLocaleTimeString();
 
-        fetch('/patient/chat-services', {
+        fetch('/patient/chatServices', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -114,13 +134,13 @@
                     '<div class="p-3 ms-3" style="border-radius: 15px; background-color: #fbfbfb;">' +
                     '<p class="small mb-0">' + document.querySelector("form #message").value + '</p>' +
                     '</div>' +
-                    '<img src="{{ asset('media/icons/chatuser.png') }}" alt="user" style="width: 45px; height: 100%;">' +
+                    '<img src="{{ asset('media/icons/chatuser.svg') }}" alt="user" style="width: 45px; height: 100%;">' +
                     '</div>';
 
                 // Populate receiving message
                 const receivingMessage = '<div class="d-flex flex-row justify-content-start mb-4">' +
                     '<img src="{{ asset('media/icons/avichatbot.png') }}" alt="avatar 1" style="width: 45px; height: 100%;">' +
-                    '<div class="p-3 ms-3" style="border-radius: 15px; background-color: rgb(49, 255, 215);">' +
+                    '<div class="p-3 ms-3" style="border-radius: 15px; background-color: rgb(200, 255, 244);">' +
                     '<p class="small mb-0" style="color: rgb(38, 109, 107);"><strong>' + data +
                     '</strong></p>' +
                     '</div>' +

@@ -81,7 +81,7 @@
         </div>
     </div>
         <!-- ./wrapper-->
-        @include('inc._users_scripts')
+        @include('patient-home.inc._users_scripts')
 </body>
 
 </html>
