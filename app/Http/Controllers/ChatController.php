@@ -310,7 +310,7 @@ class ChatController extends Controller
                     "- Esta es la información o datos personales del USUARIO {$patient}." .
                     "- Informa al USUARIO la cita agendada que se le asignó: " .
                     (isset($newAppointment) ? "El día " . $newAppointment->date . " a las " . $newAppointment->start_time : "No tiene cita agendada.") .
-                    " Si te pregunta, solo le dirás estos datos: 'FECHA' y 'HORA' de la cita solamente. La hora de la cita se le daras en formato de 12 horas." . 
+                    " Si te pregunta, solo le dirás estos datos: 'DIA' 'MES' y 'HORA' de la cita solamente. La hora de la cita se le daras en formato de 12 horas." . 
                     "Cuando el USUARIO finalize la conversación dile que sera redirigido al portal web",
                 ];
                 // Agregar el contexto inicial al arreglo de mensajes

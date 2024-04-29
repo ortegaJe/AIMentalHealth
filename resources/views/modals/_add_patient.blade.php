@@ -42,7 +42,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="row">
+{{--                             <div class="row">
                                 <div class="col-sm">
                                     <label for="age">Edad</label>
                                     <input type="text" id="age" name="age"
@@ -56,7 +56,7 @@
                                         </div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row">
                                 <div class="col-sm">
                                     <div class="form-group">

@@ -44,12 +44,23 @@ class OrientationLtrController extends Controller
         $doctor_id = Auth::user()->id;
 
         $patient = Patient::find($request->patient_id);
+
+        //$appointment = $patient->appointments()->where('user_id', $doctor_id)->get();
+        //return $appointment;
+
         $patient->orientationLtrs()->create(
             [
                 'content' => $request->content,
                 'user_id' => $doctor_id
             ]
         );
+
+        $patient->appointments()->update(
+            [
+                'status' => 1
+            ]
+        );
+
         return back()
         ->with(
             'success',

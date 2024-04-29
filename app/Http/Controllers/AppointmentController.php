@@ -41,6 +41,7 @@ class AppointmentController extends Controller
                                                          'appointments.motivation',
                                                          'appointments.date',
                                                          'appointments.start_time',
+                                                         'appointments.status',
                                                         DB::raw("LOWER(CASE WHEN appointments.motivation 
                                                                     IN('RIESGO BAJO', 'RIESGO MODERADO', 'RIESGO ALTO', 'PRECISA INGRESO') 
                                                                         THEN appointments.motivation ELSE '' END) as risk"))
@@ -59,6 +60,7 @@ class AppointmentController extends Controller
                                                             'appointments.motivation',
                                                             'appointments.date',
                                                             'appointments.start_time',
+                                                            'appointments.status',
                                                             DB::raw("LOWER(CASE WHEN appointments.motivation 
                                                                         IN('RIESGO BAJO', 'RIESGO MODERADO', 'RIESGO ALTO', 'PRECISA INGRESO') 
                                                                             THEN appointments.motivation ELSE '' END) as risk"))

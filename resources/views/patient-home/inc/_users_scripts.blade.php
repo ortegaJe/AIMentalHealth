@@ -185,8 +185,6 @@
     document.querySelector("form").addEventListener("submit", function(event) {
         event.preventDefault();
 
-        console.log('id del paciente',document.querySelector("#patient_id").value);
-
         // Stop empty messages
         if (document.querySelector("form #message").value.trim() === '') {
             return;

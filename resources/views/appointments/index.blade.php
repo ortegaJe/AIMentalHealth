@@ -86,16 +86,20 @@
                                         <td>{{ $appointment['full_name'] }}</td>
                                         <td>
                                             @if ($appointment['risk'] === 'riesgo bajo')
-                                            <span class="badge badge-primary">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                                <span
+                                                    class="badge badge-primary">{{ Str::ucfirst($appointment['risk']) }}</span>
                                             @endif
                                             @if ($appointment['risk'] === 'riesgo moderado')
-                                            <span class="badge badge-warning">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                                <span
+                                                    class="badge badge-warning">{{ Str::ucfirst($appointment['risk']) }}</span>
                                             @endif
                                             @if ($appointment['risk'] === 'riesgo alto')
-                                            <span class="badge badge-danger">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                                <span
+                                                    class="badge badge-danger">{{ Str::ucfirst($appointment['risk']) }}</span>
                                             @endif
                                             @if ($appointment['risk'] === 'precisa ingreso')
-                                            <span class="badge badge-danger">{{ Str::ucfirst($appointment['risk']) }}</span>
+                                                <span
+                                                    class="badge badge-danger">{{ Str::ucfirst($appointment['risk']) }}</span>
                                             @endif
                                         </td>
                                         <td class="truncate">{{ $appointment['motivation'] }}</td>
@@ -104,7 +108,8 @@
                                         </td> --}}
                                         <td>
                                             @if (\App\Enums\UserRoles::isDoctor(Auth::user()->role) || \App\Enums\UserRoles::isAdmin(Auth::user()->role))
-                                                <button type="button" class="btn btn-block btn-danger"
+                                                <button type="button"
+                                                    class="btn btn-block {{ $appointment->status === 1 ? 'btn-success' : 'btn-danger' }}"
                                                     onclick="window.location='{{ route('patients.show', [$appointment->patient_id]) }}'">
                                                     <i class="fas fa-notes-medical"></i>
                                                     Evaluación Psicológica

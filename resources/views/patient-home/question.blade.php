@@ -76,7 +76,7 @@
     </section>
 
     <!-- ./wrapper-->
-    @include('patient-home.inc._users_scripts')
+    @include('inc._users_scripts')
 
     <script>
         $(document).ready(function() {

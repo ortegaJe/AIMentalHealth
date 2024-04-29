@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ModelHelpers;
 use App\Http\Requests\PatientFormRequest;
+use App\Mail\CredentialMail;
 use App\Models\Patient;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PatientsController extends Controller
@@ -84,7 +87,21 @@ class PatientsController extends Controller
     public function store(PatientFormRequest $request)
     {
         $validated = $request->validated();
+
+        $realPassword = fake()->regexify('[A-Z]{5}[0-4]{3}');
+        $validated['password'] = Hash::make($realPassword);
+
+        $validated['token'] = Hash::make(fake()->uuid());
+
         $patient = Patient::create($validated);
+
+        $mailData = [
+            'full_name' => $patient->full_name,
+            'email' => $patient->email,
+            'password' => $realPassword,
+        ];
+            
+        Mail::to($patient->email)->send(new CredentialMail($mailData));
 
         // If this patient was added by the doctor 
         // we attachPatient to the current doctor
